@@ -1,0 +1,21 @@
+{
+  "lb_vendor": "Vendor",
+  "lb_vendor_list": "Vendor List",
+  "add_vendor": "Add Vendor & Customer",
+  "lb_name": "Name",
+  "lb_contact": "Contact",
+  "lb_email": "Email",
+  "lb_phone": "Phone",
+  "lb_address": "Address",
+  "lb_remarks": "Remarks",
+  "lb_client": "Client",
+  "lb_active": "Active",
+  "lb_inactive": "Inactive",
+  "lb_vendor_and_client": "Vendor & Client",
+  "lb_type": "Type",
+  "lb_private_item": "Private Item",
+  "lb_city": "City",
+  "lb_province": "Province",
+  "lb_postal_code": "Postal Code",
+  "lb_country": "Country"
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Picking List",
+  "outbound_order": "Outbound Order",
+  "Label---------------------------------": "",
+  "lb_vendor": "Customer",
+  "lb_warehouse": "Warehouse",
+  "lb_order_no": "Order No",
+  "lb_location_code": "Scan LocationCode",
+  "lb_upc_or_sku": "UPC/SKU",
+  "lb_batch_number": "Batch#",
+  "lb_expiry_date": "Expiry Date",
+  "lb_total": "Total",
+  "lb_picked": "Picked",
+  "lb_short": "Short",
+  "lb_picking": "Picking",
+
+  "DTLabel---------------------------------": "",
+  "dtlb_order_info": "Order Info",
+  "dtlb_status": "Status",
+  "dtlb_warehouse": "Warehouse",
+  "dtlb_picking_process": "Picking Process",
+  "dtlb_remarks": "Remark",
+  "dtlb_all_picked": "All Picked",
+  "dtlb_partial_picked": "Partial Picked",
+  "dtlb_bulk_picking": "Bulk Picking",
+
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+  "btn_force_finish": "Force Finish Picking",
+  "btn_finish": "Finish",
+  "btn_bulk_picking": "Bulk Picking",
+  "btn_clear": "Clear",
+
+  "Toast---------------------------------": "",
+  "toast_select_row": "Please select at least one row to process.",
+
+  "Modal---------------------------------": "",
+  "md_confirm_finish_picking": "Confirm Finish Picking?",
+  "md_confirm_finish_picking_body": "Confirm to finish picking!"
+}

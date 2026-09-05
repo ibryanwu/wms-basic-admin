@@ -1,0 +1,25 @@
+{
+  "title": "库存详情",
+  "Label---------------------------------": "",
+  "lb_items_search": "商品搜索",
+  "lb_items": "商品",
+  "lb_warehouse": "仓库",
+  "lb_vendor": "供应商",
+  "lb_location_code": "库位代码",
+  "lb_start_expiry_date": "开始到期日期",
+  "lb_end_expiry_date": "结束到期日期",
+
+  "DTLabel---------------------------------": "",
+  "dtlb_item": "商品",
+  "dtlb_inv_balance": "库存余额",
+  "dtlb_location": "库位",
+  "dtlb_cost": "成本",
+  "dtlb_cost_balance": "成本余额",
+  "dtlb_info": "信息",
+
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+
+  "Toast---------------------------------": "",
+  "toast_location_code": "找不到库位。请检查代码是否属于所选仓库"
+}

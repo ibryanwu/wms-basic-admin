@@ -1,0 +1,13 @@
+{
+  "title": "调拨订单列表",
+  "transfer_order": "调拨订单列表",
+  "lb_from_warehouse": "来源仓库",
+  "lb_to_warehouse": "目标仓库",
+  "lb_order_no": "订单编号",
+  "lb_order_start_date": "订单开始日期",
+  "lb_order_end_date": "订单结束日期",
+  "lb_order_status": "订单状态",
+  "lb_remark": "备注",
+  "lb_order_info": "订单信息",
+  "lb_status": "状态"
+}

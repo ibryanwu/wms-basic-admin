@@ -1,0 +1,27 @@
+{
+  "title": "调拨订单",
+  "transfer_order": "调拨订单",
+  "lb_from_warehouse": "来源仓库",
+  "lb_to_warehouse": "目标仓库",
+  "lb_to_location_code": "目标库位代码",
+  "lb_remarks": "备注",
+  "lb_transfer_qty": "调拨数量",
+  "lb_must_be_a_number_and_gt_0": "必须是大于 0 的数字",
+
+  "toast_transfer_order_created_successfully": "调拨订单创建成功",
+  "toast_order_update_successfully": "订单更新成功！",
+
+  "btn_approving": "批准中...",
+  "btn_approve": "批准",
+  "btn_saving": "保存中...",
+  "btn_save": "保存",
+  "btn_new": "新增",
+
+  "lb_warehouse_required": "必须选择仓库",
+  "lb_transfer_date_required": "必须填写调拨日期",
+  "lb_transfer_qty_required": "必须填写调拨数量",
+  "lb_to_location_code_required": "必须填写目标库位代码",
+  "lb_from_warehouse_required": "必须选择来源仓库",
+  "lb_to_warehouse_required": "必须选择目标仓库",
+  "lb_transfer_qty_must_be_a_number_and_gt_0": "调拨数量必须是大于 0 的数字"
+}

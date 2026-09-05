@@ -1,0 +1,20 @@
+{
+  "title": "Inventory by warehouse",
+  "Label---------------------------------": "",
+  "lb_items_search": "Items Search",
+  "lb_items": "Items",
+  "lb_warehouse": "Warehouse",
+  "lb_vendor": "Vendor",
+  "DTLabel---------------------------------": "",
+  "dtlb_sku": "SKU",
+  "dtlb_warehouse": "Warehouse",
+  "dtlb_balance": "Balance",
+  "dtlb_picking": "Picking...",
+  "dtlb_total_cost": "Total Cost",
+
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+
+  "Toast---------------------------------": "",
+  "toast_location_code": "Can not find location. Please check if the Code belongs to selected warehouse"
+}

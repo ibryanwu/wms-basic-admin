@@ -1,0 +1,19 @@
+{
+  "FormLabel---------------------------------": "",
+  "form_lb_remarks": "备注",
+  "form_lb_active": "启用",
+
+  "Button---------------------------------": "",
+  "btn_login": "登录",
+  "btn_reset": "重置",
+  "btn_search": "搜索",
+  "btn_new": "+ 新建",
+  "btn_save": "保存",
+  "btn_saveing": "保存中...",
+  "btn_approve": "批准",
+  "btn_approving": "批准中...",
+
+  "btn_cancel": "取消",
+  "btn_export": "导出结果为 CSV",
+  "btn_refresh": "刷新"
+}

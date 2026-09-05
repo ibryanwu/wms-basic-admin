@@ -1,0 +1,36 @@
+{
+  "title": "入库订单列表",
+
+  "Label---------------------------------": "",
+  "lb_vendor": "供应商",
+  "lb_warehouse": "仓库",
+  "lb_invoice_no": "发票号",
+  "lb_batch_number": "批号",
+  "lb_order_type": "订单类型",
+  "lb_order_start_date": "订单开始日期",
+  "lb_order_end_date": "订单结束日期",
+  "lb_remarks": "备注",
+
+  "DTLabel---------------------------------": "",
+  "dtlb_order_info": "订单信息",
+  "dtlb_total": "总计",
+  "dtlb_status": "状态",
+  "dtlb_warehouse": "仓库",
+  "dtlb_remark": "备注",
+
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+
+  "Toast---------------------------------": "",
+  "toast_approve_success": "批准成功",
+  "toast_created_success": "入库单创建成功",
+  "toast_update_success": "订单更新成功",
+  "toast_check_items": "请至少添加一个商品",
+
+  "Modal---------------------------------": "",
+  "md_approve_confirm_title": "确认批准订单",
+  "md_approve_confirm_body": "确认批准订单",
+  "md_approve_confirm_button": "确认批准订单",
+
+  "toast_location_code": "找不到库位。请检查代码是否属于所选仓库"
+}

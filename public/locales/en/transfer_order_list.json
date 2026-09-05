@@ -1,0 +1,13 @@
+{
+  "title": "Transfer Order List",
+  "transfer_order": "Transfer Order List",
+  "lb_from_warehouse": "From Warehouse",
+  "lb_to_warehouse": "To Warehouse",
+  "lb_order_no": "Order No",
+  "lb_order_start_date": "Order Start Date",
+  "lb_order_end_date": "Order End Date",
+  "lb_order_status": "Order Status",
+  "lb_remark": "Remark",
+  "lb_order_info": "Order Info",
+  "lb_status": "Status"
+}

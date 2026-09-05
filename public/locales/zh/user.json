@@ -1,0 +1,15 @@
+{
+  "lb_user": "用户",
+  "lb_user_list": "用户列表",
+  "add_user": "添加用户",
+  "lb_name": "名称",
+  "lb_email": "电子邮件",
+  "lb_phone": "电话",
+  "lb_role": "角色",
+  "lb_contact": "联系人",
+  "lb_active": "启用",
+  "lb_inactive": "禁用",
+  "lb_vendor": "供应商",
+  "lb_private_item": "私有商品",
+  "lb_password": "密码"
+}

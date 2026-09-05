@@ -1,0 +1,9 @@
+{
+  "lb_category": "Category",
+  "lb_category_list": "Category List",
+  "add_category": "Add Category",
+  "lb_name": "Name",
+  "lb_description": "Description",
+  "lb_active": "Active",
+  "lb_inactive": "Inactive"
+}

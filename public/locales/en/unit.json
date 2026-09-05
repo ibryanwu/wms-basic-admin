@@ -1,0 +1,9 @@
+{
+  "lb_unit": "Unit",
+  "lb_unit_list": "Unit List",
+  "add_unit": "Add Unit",
+  "lb_name": "Name",
+  "lb_remarks": "Remarks",
+  "lb_active": "Active",
+  "lb_inactive": "Inactive"
+}

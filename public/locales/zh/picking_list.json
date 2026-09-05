@@ -1,0 +1,41 @@
+{
+  "title": "拣货列表",
+  "outbound_order": "出库单",
+
+  "Label---------------------------------": "",
+  "lb_vendor": "客户",
+  "lb_warehouse": "仓库",
+  "lb_order_no": "订单编号",
+  "lb_location_code": "扫描库位代码",
+  "lb_upc_or_sku": "UPC/SKU",
+  "lb_batch_number": "批号",
+  "lb_expiry_date": "到期日期",
+  "lb_total": "总计",
+  "lb_picked": "已拣货",
+  "lb_short": "短缺",
+  "lb_picking": "拣货中",
+
+  "DTLabel---------------------------------": "",
+  "dtlb_order_info": "订单信息",
+  "dtlb_status": "状态",
+  "dtlb_warehouse": "仓库",
+  "dtlb_picking_process": "拣货进度",
+  "dtlb_remarks": "备注",
+  "dtlb_all_picked": "全部拣货",
+  "dtlb_partial_picked": "部分拣货",
+  "dtlb_bulk_picking": "批量拣货",
+
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+  "btn_force_finish": "强制完成拣货",
+  "btn_finish": "完成",
+  "btn_bulk_picking": "批量拣货",
+  "btn_clear": "清空",
+
+  "Toast---------------------------------": "",
+  "toast_select_row": "请至少选择一行进行处理。",
+
+  "Modal---------------------------------": "",
+  "md_confirm_finish_picking": "确认完成拣货？",
+  "md_confirm_finish_picking_body": "确认要完成拣货吗？"
+}

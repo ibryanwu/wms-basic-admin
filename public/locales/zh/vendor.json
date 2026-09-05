@@ -1,0 +1,21 @@
+{
+  "lb_vendor": "供应商/客户",
+  "lb_vendor_list": "供应商/客户列表",
+  "add_vendor": "添加供应商 & 客户",
+  "lb_name": "名称",
+  "lb_contact": "联系人",
+  "lb_email": "电子邮件",
+  "lb_phone": "电话",
+  "lb_address": "地址",
+  "lb_remarks": "备注",
+  "lb_client": "客户",
+  "lb_active": "启用",
+  "lb_inactive": "禁用",
+  "lb_vendor_and_client": "供应商 & 客户",
+  "lb_type": "类型",
+  "lb_private_item": "私有商品",
+  "lb_city": "城市",
+  "lb_province": "省份",
+  "lb_postal_code": "邮政编码",
+  "lb_country": "国家"
+}

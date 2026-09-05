@@ -1,0 +1,18 @@
+{
+  "FormLabel---------------------------------": "",
+  "form_lb_remarks": "Remarks",
+  "form_lb_active": "Active",
+  "Button---------------------------------": "",
+  "btn_login": "Login",
+  "btn_reset": "Reset",
+  "btn_search": "Search",
+  "btn_new": "+ New",
+  "btn_save": "Save",
+  "btn_saveing": "Saveing...",
+  "btn_approve": "Approve",
+  "btn_approving": "Approving...",
+
+  "btn_cancel": "Cancel",
+  "btn_export": "Export Result to CSV",
+  "btn_refresh": "Refresh"
+}

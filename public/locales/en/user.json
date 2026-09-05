@@ -1,0 +1,15 @@
+{
+  "lb_user": "User",
+  "lb_user_list": "User List",
+  "add_user": "Add User",
+  "lb_name": "Name",
+  "lb_email": "Email",
+  "lb_phone": "Phone",
+  "lb_role": "Role",
+  "lb_contact": "Contact",
+  "lb_active": "Active",
+  "lb_inactive": "Inactive",
+  "lb_vendor": "Vendor",
+  "lb_private_item": "Private Item",
+  "lb_password": "Password"
+}

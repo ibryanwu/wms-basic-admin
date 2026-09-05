@@ -1,0 +1,27 @@
+{
+  "title": "Inventory Transactions",
+  "Label---------------------------------": "",
+  "lb_items": "Items",
+  "lb_warehouse": "Warehouse",
+  "lb_vendor": "Vendor",
+  "lb_batch_number": "Batch Number",
+  "lb_order_no": "Order No",
+  "lb_location_code": "Location Code",
+  "lb_order_type": "Order Type",
+  "lb_stock_in_out": "StockInOut",
+  "lb_order_start_date": "Order Start Date",
+  "lb_order_end_date": "Order End Date",
+  "DTLabel---------------------------------": "",
+  "dtlb_item": "Item",
+  "dtlb_stock_in_out": "Stock In/Out",
+  "dtlb_qty": "Qty",
+  "dtlb_warehouse": "Warehouse",
+  "dtlb_to": "Warehouse",
+  "dtlb_info": "OrderInfo",
+  "Form---------------------------------": "",
+  "form_lb_": "",
+  "Button---------------------------------": "",
+
+  "Toast---------------------------------": "",
+  "toast_location_code": "Can not find location. Please check if the Code belongs to selected warehouse"
+}

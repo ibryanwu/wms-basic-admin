@@ -1,0 +1,404 @@
+'use client';
+import React, { useEffect, useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import Seo from '@/shared/layout-components/seo/seo';
+const ReactApexChart = dynamic(() => import('react-apexcharts'), {
+  ssr: false,
+});
+import SelectPro from '../../component-lib/select';
+
+import { useToken } from '@/lib/hooks/use-token';
+import { useRouter } from 'next/router';
+import Datepicker from '../../component-lib/form-ele';
+import { ButtonGroup } from '@mui/joy';
+import {
+  Breadcrumb,
+  Button,
+  Col,
+  Row,
+  Form,
+  Card,
+  Stack,
+  InputGroup,
+} from 'react-bootstrap';
+import Link from 'next/link';
+import dayjs from 'dayjs';
+import { useGetAllPaymentMethod, useGetAllPaymentStatus } from '@/rest/payment';
+import { useGetAllVendors } from '@/rest/vendor';
+import { useMe } from '@/rest/auth';
+import { useForm } from 'react-hook-form';
+import PurOrderListDataTable from '@/component-lib/data-table/PurOrderListDT';
+import {
+  useDeletePruchaseOrder,
+  useSearchPruchaseOrderList,
+} from '@/rest/purchase';
+import { ISearchOrderParams } from '@/types/purchase';
+import { deleteOrderIdAtom, useClearAllAtom } from '@/stores/atom';
+import { useAtom } from 'jotai';
+import { toast } from 'react-toastify';
+import { useGetWarehouse } from '@/rest/inv';
+import { convertPurOrderSeqNo } from '@/service/purchase';
+
+const Main = () => {
+  // Values  -------------------------------------------------
+  // Auth ----------------------------------------------------
+  // Atoms ---------------------------------------------------
+  const [deleteOrderId, setDeleteOrderId] = useAtom(deleteOrderIdAtom);
+
+  // UseState  -----------------------------------------------
+  // UseForm  ------------------------------------------------
+  const {
+    register,
+    handleSubmit: handleSubmit,
+    formState: { errors },
+    getValues,
+    setValue,
+    control,
+  } = useForm({
+    mode: 'onTouched',
+    reValidateMode: 'onSubmit',
+    //values: defaultFormDate,
+  });
+  // Hooks  --------------------------------------------------
+  const { mutate: getMe, data: me, isLoading: isLoadingMe, isMe } = useMe();
+  const clearAllAtom = useClearAllAtom();
+  const { data: warehouseData } = useGetWarehouse({ isActive: true });
+  const { data: vendorsData } = useGetAllVendors({ type: 1 });
+  const {
+    mutate: searchMutate,
+    data: orderListData,
+    isLoading,
+    serverError,
+    setServerError,
+  } = useSearchPruchaseOrderList();
+  const {
+    mutate: deleteOrderById,
+    data: deleteRes,
+    isLoading: isDeleteLoading,
+  } = useDeletePruchaseOrder();
+
+  // Use Effect  ---------------------------------------------
+
+  useEffect(() => {
+    clearAllAtom();
+    searchMutate({ params: { page: 1, pageSize: 100 }, payload: {} });
+  }, []);
+
+  useEffect(() => {
+    if (deleteOrderId !== '') {
+      deleteOrderById({ orderId: deleteOrderId });
+      setDeleteOrderId('');
+    }
+  }, [deleteOrderId]);
+
+  useEffect(() => {
+    if (!deleteRes) return;
+    if (deleteRes?.code === 0 && deleteRes.data.affected > 0) {
+      //@ts-ignore
+      handleSubmit(onSubmit)();
+      toast.success('Order delete successfully');
+    } else {
+      toast.error('Delete order failed');
+    }
+  }, [deleteRes]);
+
+  // Function ------------------------------------------------
+
+  function onSubmit(data: ISearchOrderParams | any) {
+    console.log('🚀 ~ file: order-list.tsx:62 ~ Main ~ data:', data);
+    const payload: any = {
+      seq_order_no: data.seq_order_no,
+      batch_number: data.batch_number || '',
+      highlight: data.highlight || '',
+      invoice_no: data.invoice_no || '',
+      start_date: data.start_date
+        ? dayjs(data.start_date).format('YYYY-MM-DD')
+        : '',
+      end_date: data.end_date ? dayjs(data.end_date).format('YYYY-MM-DD') : '',
+      remark: data.remark || '',
+      vendor_id: data.vendor ? data.vendor.value : '',
+      warehouse_id: data.warehouse ? data.warehouse.value : '',
+    };
+    console.log('🚀 ~ file: order-list.tsx:91 ~ onSubmit ~ payload:', payload);
+    searchMutate({ params: { page: 1, pageSize: 200 }, payload });
+  }
+
+  //
+  const exportToCSV = () => {
+    const poListHeader =
+      'Purchase Number / 进货单号,Vendor / 供应商,Number of items,Purchase Date / 日期,SubTotal	,Tax,Shipping Fee,Total';
+
+    if (orderListData) {
+      const csv = `${poListHeader}\n${orderListData.data
+        .map((row: any) => {
+          const field: any[] = [];
+          field.push(convertPurOrderSeqNo(row.seq_order_no));
+          field.push(row.vendor.name);
+          field.push(row.purchaseItems.length);
+          field.push(row.purchased_date);
+          field.push(row.total.subtotal);
+          field.push(row.total.tax);
+          field.push(row.total.shipping_fee);
+          field.push(row.total.total);
+          return field;
+        })
+        .join('\n')}`;
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'export.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+  return (
+    <div>
+      <Seo title={'Product Form'} /> {/* <!-- breadcrumb --> */}
+      <div className="breadcrumb-header justify-content-between">
+        <div className="left-content">
+          <span className="main-content-title mg-b-0 mg-b-lg-1">
+            Purchase Order List
+          </span>
+        </div>
+
+        <div className="justify-content-center mt-2">
+          <Breadcrumb className="breadcrumb">
+            <Breadcrumb.Item
+              className="breadcrumb-item tx-15"
+              href="./index.tsx"
+            >
+              Purchase-order
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+              className="breadcrumb-item "
+              active
+              aria-current="page"
+            >
+              List
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+      {/* <!-- /breadcrumb --> */}
+      <Form className="form-horizontal" onSubmit={handleSubmit(onSubmit)}>
+        <Row>
+          <Col md={12}>
+            <Card className="card custom-card">
+              <Card.Header className="card-header">
+                <Card.Body>
+                  <Row className="row-xs">
+                    <Col
+                      md={2}
+                      className=" mg-t-10 mg-md-t-0"
+                      style={{ zIndex: 999 }}
+                    >
+                      <Form.Group className="form-group">
+                        <Form.Label>Vendor</Form.Label>
+                        {vendorsData?.data && (
+                          <SelectPro
+                            key="vendor"
+                            name="vendor"
+                            control={control}
+                            defaultValue={undefined}
+                            options={vendorsData.data}
+                            isMulti={false}
+                            rules={{ required: 'Vendor is required' }}
+                            filterOption={undefined}
+                            isDisabled={false}
+                            onChangeHandler={undefined}
+                          />
+                        )}
+                      </Form.Group>
+                    </Col>
+                    <Col
+                      md={2}
+                      className=" mg-t-10 mg-md-t-0"
+                      style={{ zIndex: 100 }}
+                    >
+                      <Form.Group className="form-group">
+                        <Form.Label>Warehouse</Form.Label>
+                        {warehouseData?.data && (
+                          <SelectPro
+                            key="warehouse"
+                            name="warehouse"
+                            control={control}
+                            defaultValue={undefined}
+                            options={warehouseData.data}
+                            isMulti={false}
+                            rules={{ required: 'Warehouse is required' }}
+                            filterOption={undefined}
+                            isDisabled={false}
+                            onChangeHandler={undefined}
+                            //isDisabled={itemListDatas?.length > 0}
+                          />
+                        )}
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={2} className=" mg-t-10 mg-md-t-0">
+                      <Form.Group className="form-group">
+                        <Form.Label>Order No</Form.Label>
+                        <Form.Control
+                          {...register('seq_order_no')}
+                          placeholder="order number"
+                          type="text"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={2} className=" mg-t-10 mg-md-t-0">
+                      <Form.Group className="form-group">
+                        <Form.Label>Invoice No</Form.Label>
+                        <Form.Control
+                          {...register('invoice_no')}
+                          placeholder="来源单号"
+                          type="text"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={2} className=" mg-t-10 mg-md-t-0">
+                      <Form.Group className="form-group">
+                        <Form.Label>Batch Number</Form.Label>
+                        <Form.Control
+                          {...register('batch_number')}
+                          placeholder="批次号"
+                          type="text"
+                        />
+                      </Form.Group>
+                    </Col>
+
+                    <Col
+                      xs={12}
+                      lg={2}
+                      xl={2}
+                      className=" mg-t-10 mg-md-t-0"
+                      style={{ zIndex: 99 }}
+                    >
+                      <Form.Group className="form-group">
+                        <Form.Label>Purchased Start Date</Form.Label>
+                        <InputGroup className="input-group reactdate-pic">
+                          <InputGroup.Text className="input-group-text">
+                            <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
+                          </InputGroup.Text>
+                          <div className="wd-150">
+                            <Datepicker
+                              key="start_date"
+                              name="start_date"
+                              control={control}
+                              isMulti={false}
+                              rules={{ required: 'Purchased Date is required' }}
+                            />
+                          </div>
+                        </InputGroup>
+                      </Form.Group>
+                    </Col>
+                    <Col
+                      xs={12}
+                      lg={2}
+                      className=" mg-t-10 mg-md-t-0 "
+                      style={{ zIndex: 99 }}
+                    >
+                      <Form.Group className="form-group">
+                        <Form.Label>End Date</Form.Label>
+                        <InputGroup className="input-group reactdate-pic">
+                          <InputGroup.Text className="input-group-text">
+                            <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
+                          </InputGroup.Text>
+                          <div className="wd-150">
+                            <Datepicker
+                              key="end_date"
+                              name="end_date"
+                              control={control}
+                              isMulti={false}
+                              rules={{}}
+                            />
+                          </div>
+                        </InputGroup>
+                      </Form.Group>
+                    </Col>
+                    <Col md={4} className=" mg-t-10 mg-md-t-0">
+                      <Form.Group className="form-group">
+                        <Form.Label>Remark</Form.Label>
+                        <Form.Control
+                          {...register('remark')}
+                          placeholder=""
+                          type="text"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={3} className=" mg-t-10 mg-md-t-0">
+                      <Form.Group className="form-group">
+                        <Form.Label>Highlight</Form.Label>
+                        <Form.Control
+                          {...register('highlight')}
+                          placeholder=""
+                          type="text"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={1} className=" mg-t-10 mg-md-t-0">
+                      <Form.Group className="form-group">
+                        <Form.Label>
+                          <span className="tx-white">.</span>
+                        </Form.Label>
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          disabled={isLoading}
+                        >
+                          Search
+                        </Button>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card.Header>
+            </Card>
+          </Col>
+        </Row>
+      </Form>
+      <div>
+        <Row className="row-sm">
+          {/* <!-- col --> */}
+          <Col xl={12} md={12}>
+            <Row className=" row-sm">
+              {/* <!-- /col --> */}
+              <Col lg={12}>
+                <Stack direction="horizontal" gap={3} className="mg-b-10">
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      exportToCSV();
+                    }}
+                  >
+                    <i className="fa fa-table mg-r-4"></i>
+                    Export CSV
+                  </Button>
+                </Stack>
+              </Col>
+            </Row>
+          </Col>
+          {/* <!-- /col --> */}
+        </Row>
+        <PurOrderListDataTable
+          orderListData={orderListData}
+        ></PurOrderListDataTable>
+      </div>
+    </div>
+  );
+};
+const PurchaseOrderList = () => {
+  return (
+    <>
+      <Main />
+    </>
+  );
+};
+
+PurchaseOrderList.layout = 'Contentlayout';
+
+// PurchaseOrderList.layout = 'Contentlayout';
+
+export default PurchaseOrderList;

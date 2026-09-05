@@ -1,0 +1,9 @@
+{
+  "lb_category": "分类",
+  "lb_category_list": "分类列表",
+  "add_category": "添加分类",
+  "lb_name": "名称",
+  "lb_description": "描述",
+  "lb_active": "启用",
+  "lb_inactive": "禁用"
+}

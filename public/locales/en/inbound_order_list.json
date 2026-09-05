@@ -1,0 +1,36 @@
+{
+  "title": "Inbound Order List",
+  
+
+  "Label---------------------------------": "",
+  "lb_vendor": "Vendor",
+  "lb_warehouse": "Warehouse",
+  "lb_invoice_no": "Invoice No",
+  "lb_batch_number": "Batch No",
+  "lb_order_type": "Order Type",
+  "lb_order_start_date": "Order Start Date",
+  "lb_order_end_date": "Order End Date",
+  "lb_remarks": "Remarks",
+
+  "DTLabel---------------------------------": "",
+  "dtlb_order_info": "Order Info",
+  "dtlb_total": "Total",
+  "dtlb_status": "Status",
+  "dtlb_warehouse": "Warehouse",
+  "dtlb_remark": "Remark",
+
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+
+  "Toast---------------------------------": "",
+  "toast_approve_success": "Approve successfully",
+  "toast_created_success": "Inbound created successfully",
+  "toast_update_success": "Order Update successfully",
+  "toast_check_items": "Please add at least one item",
+  "Modal---------------------------------": "",
+  "md_approve_confirm_title": "Confirm Approve Order",
+  "md_approve_confirm_body": "Confirm Approve Order",
+  "md_approve_confirm_button": "Confirm Approve Order",
+
+  "toast_location_code": "Can not find location. Please check if the Code belongs to selected warehouse"
+}

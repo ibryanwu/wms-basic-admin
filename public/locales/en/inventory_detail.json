@@ -1,0 +1,23 @@
+{
+  "title": "Inventory Detail",
+  "Label---------------------------------": "",
+  "lb_items_search": "Items Search",
+  "lb_items": "Items",
+  "lb_warehouse": "Warehouse",
+  "lb_vendor": "Vendor",
+  "lb_location_code": "Location Code",
+  "lb_start_expiry_date": "Start Expiry Date",
+  "lb_end_expiry_date": "End Expiry Date",
+  "DTLabel---------------------------------": "",
+  "dtlb_item": "Item",
+  "dtlb_inv_balance": "INV Balance",
+  "dtlb_location": "Location",
+  "dtlb_cost": "Cost",
+  "dtlb_cost_balance": "Cost Balance",
+  "dtlb_info": "Info",
+  "Form---------------------------------": "",
+  "Button---------------------------------": "",
+  
+  "Toast---------------------------------": "",
+  "toast_location_code": "Can not find location. Please check if the Code belongs to selected warehouse"
+}

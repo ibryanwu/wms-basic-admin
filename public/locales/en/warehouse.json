@@ -1,0 +1,12 @@
+{
+  "lb_warehouse": "Warehouse",
+  "lb_warehouse_list": "Warehouse List",
+  "add_warehouse": "Add Warehouse",
+  "lb_name": "Name",
+  "lb_address": "Address",
+  "lb_remarks": "Remarks",
+  "lb_active": "Active",
+  "lb_inactive": "Inactive",
+  "lb_description": "Description",
+  "lb_location": "Location"
+}

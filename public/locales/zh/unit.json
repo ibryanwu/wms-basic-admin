@@ -1,0 +1,9 @@
+{
+  "lb_unit": "单位",
+  "lb_unit_list": "单位列表",
+  "add_unit": "添加单位",
+  "lb_name": "名称",
+  "lb_remarks": "备注",
+  "lb_active": "启用",
+  "lb_inactive": "禁用"
+}

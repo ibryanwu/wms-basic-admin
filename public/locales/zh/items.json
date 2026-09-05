@@ -1,0 +1,22 @@
+{
+  "Label---------------------------------": "",
+  "lb_search": "搜索",
+  "lb_category": "分类",
+  "lb_vendor": "供应商",
+  "btn_sync": "同步LBoss商品",
+  "btn_sync_loading": "请稍等,同步大约需要1分钟,请勿中断同步",
+  "sync_success": "同步LBoss商品成功",
+  "sync_error": "同步LBoss商品失败",
+  "DTLabel---------------------------------": "",
+  "dtlb_item": "商品",
+  "dtlb_category": "分类",
+  "dtlb_base_unit": "基本单位",
+  "dtlb_case_unit": "库存单位",
+  "dtlb_customer_owned": "客户自有",
+  "dtlb_tax_rate": "税率",
+  "dtlb_other": "其他",
+  "dtlb_available": "可用",
+  "Form---------------------------------": "",
+  "form_lb_name": "供应商",
+  "Button---------------------------------": ""
+}
