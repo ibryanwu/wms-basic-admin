@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
 import { storeInfoAtomS } from '../../../stores/atom';
+import { getStoreLogoUrl } from '@/lib/sys';
 import { useTranslation } from 'react-i18next';
 let history = [];
 
@@ -222,13 +223,11 @@ const Sidebar = () => {
         >
           <div className="main-sidebar-header active">
             <Link className="header-logo active" href={`/dashboard`}>
-              {storeInfo && (
-                <img
-                  src={storeInfo.logo_url}
-                  className="main-logo  desktop-logo"
-                  alt={storeInfo.name}
-                />
-              )}
+              <img
+                src={getStoreLogoUrl(storeInfo?.logo_url)}
+                className="main-logo  desktop-logo"
+                alt={storeInfo?.name || 'WMS Basic'}
+              />
             </Link>
           </div>
           <div className="main-sidemenu">

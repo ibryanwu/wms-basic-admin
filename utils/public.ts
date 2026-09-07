@@ -29,6 +29,9 @@ export const getShortUUIDLast6 = () => {
   return generateShortUUID().slice(-6);
 };
 
+export const getCreateOrderPath = (orderType: 'inbound' | 'outbound') =>
+  `/${orderType}/create?t=${Date.now()}`;
+
 // 将数字格式化为货币字符串
 export function convertPrice(amount: number | string) {
   // 如果 amount 是字符串，尝试将其解析为数字

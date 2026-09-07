@@ -1,0 +1,30 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 620 180"
+  width="620"
+  height="180"
+  role="img"
+  aria-labelledby="logo-title"
+>
+  <title id="logo-title">WMSBasic</title>
+
+  <text
+    x="20"
+    y="128"
+    fill="#0B3A78"
+    font-family="Inter, Arial, sans-serif"
+    font-size="118"
+    font-weight="700"
+    letter-spacing="-7"
+  >WMS</text>
+
+  <text
+    x="318"
+    y="128"
+    fill="#08A6B5"
+    font-family="Inter, Arial, sans-serif"
+    font-size="50"
+    font-weight="500"
+    letter-spacing="-2"
+  >Basic</text>
+</svg>

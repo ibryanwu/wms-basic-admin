@@ -50,6 +50,7 @@ import { useGetAllVendors } from '@/rest/vendor';
 
 import Select from 'react-select';
 import { toastOptions } from '@/utils/public';
+import { getStoreLogoUrl } from '@/lib/sys';
 
 import { useMe } from '@/rest/auth';
 import { toast } from 'react-toastify';
@@ -786,7 +787,7 @@ const Main = (props: any) => {
                 onClick={() => {
                   const pdfDataParams = formatPdfData(transferOrder?.data);
                   //@ts-ignore
-                  pdfDataParams.storeImageUrl = storeInfo?.logo_url;
+                  pdfDataParams.storeImageUrl = getStoreLogoUrl(storeInfo?.logo_url);
                   pdfOrder(pdfDataParams);
                 }}
                 disabled={type === 'create'}

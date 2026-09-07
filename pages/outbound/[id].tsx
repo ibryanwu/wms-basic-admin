@@ -62,7 +62,12 @@ import { Button, ButtonGroup } from '@mui/joy';
 import { useGetAllVendors } from '@/rest/vendor';
 import { useGetAllItems } from '@/rest/items';
 import Select from 'react-select';
-import { generateShortUUID, toastOptions } from '@/utils/public';
+import {
+  generateShortUUID,
+  getCreateOrderPath,
+  toastOptions,
+} from '@/utils/public';
+import { getStoreLogoUrl } from '@/lib/sys';
 
 import { useMe } from '@/rest/auth';
 import { toast } from 'react-toastify';
@@ -281,7 +286,6 @@ const Main = (props: any) => {
   // Use Effect  ----------------------------------------------------
   useEffect(() => {
     clearAllData();
-    routes.replace(routes.asPath); //为了避免页面切换时的缓存，要强制刷新一次页面
     // 滚动到某个Dom 位置时，显示item搜索条
     const handleScroll = () => {
       if (!targetRef.current) {
@@ -432,7 +436,7 @@ const Main = (props: any) => {
       if (saveType.current === 'savenew') {
         clearAllAtom();
         clearAllData();
-        routes.push('/outbound/create');
+        routes.push(getCreateOrderPath('outbound'));
       } else {
         routes.push(`/outbound/${response.data.id}`);
         if (!isCreate) refetchOrder(); // 如果是更新操作则重新获取订单数据
@@ -913,7 +917,7 @@ const Main = (props: any) => {
                 onClick={() => {
                   const pdfDataParams = formatPdfData(outboundOrder?.data);
                   //@ts-ignore
-                  pdfDataParams.storeImageUrl = storeInfo?.logo_url;
+                  pdfDataParams.storeImageUrl = getStoreLogoUrl(storeInfo?.logo_url);
                   pdfOrder(pdfDataParams);
                 }}
                 disabled={type === 'create'}
@@ -2005,7 +2009,7 @@ const Outbound = () => {
   const routes = useRouter();
   // Values  ----------------------------------------------------
 
-  const { id } = routes.query;
+  const { id, t } = routes.query;
   // UseState  ----------------------------------------------------
   const [type, setType] = useState('');
   // Hooks  ----------------------------------------------------
@@ -2028,12 +2032,18 @@ const Outbound = () => {
     } else {
       setType('create');
     }
-  }, [id]);
+  }, [id, t]);
+
+  useEffect(() => {
+    if (id === 'create' && !t) {
+      routes.replace(getCreateOrderPath('outbound'));
+    }
+  }, [id, t]);
 
   useEffect(() => {
     if (!outboundOrder) return;
     if (!(outboundOrder as { data: any }).data) {
-      routes.push('/outbound/create');
+      routes.push(getCreateOrderPath('outbound'));
     }
   }, [outboundOrder]);
 
@@ -2042,7 +2052,12 @@ const Outbound = () => {
       {isMe && (
         <>
           {type === 'create' && (
-            <Main type={type} outboundOrder={outboundOrder} id={id} />
+            <Main
+              key={String(t)}
+              type={type}
+              outboundOrder={outboundOrder}
+              id={id}
+            />
           )}
 
           {type === 'edit' &&

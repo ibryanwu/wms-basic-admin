@@ -18,12 +18,14 @@ import { useToken } from '@/lib/hooks/use-token';
 import { useAtom } from 'jotai';
 import { userInfoAtomS, storeInfoAtomS } from '@/stores/atom';
 import Avatar from '@mui/material/Avatar';
+import { useBackEndVersion } from '@/rest/auth';
+import { SYS_VERSION, getStoreLogoUrl } from '@/lib/sys';
 export default function Header() {
   const [user] = useAtom(userInfoAtomS);
   const router = useRouter();
   //ATOM ----------------------------------------------------------------
   const [storeInfo] = useAtom(storeInfoAtomS);
-  console.log('🚀 ~ Header ~ storeInfo990:', storeInfo);
+  const { data: backendVersion } = useBackEndVersion();
   const { removeToken } = useToken();
   function signOut() {
     removeToken();
@@ -138,9 +140,9 @@ export default function Header() {
           <div className="responsive-logo">
             <Link href={`/dashboard`} className="header-logo">
               <img
-                src={storeInfo.logo_url}
+                src={getStoreLogoUrl(storeInfo?.logo_url)}
                 className="mobile-logo wd-50"
-                alt={storeInfo.name}
+                alt={storeInfo?.name || 'WMS Basic'}
               />
             </Link>
           </div>
@@ -160,9 +162,9 @@ export default function Header() {
             <Link href={`/dashboard`} className="header-logo">
               {storeInfo && (
                 <img
-                  src={storeInfo.logo_url}
+                  src={getStoreLogoUrl(storeInfo.logo_url)}
                   className="main-logo  desktop-logo"
-                  alt={storeInfo.name}
+                  alt={storeInfo.name || 'WMS Basic'}
                 />
               )}
             </Link>
@@ -888,12 +890,19 @@ export default function Header() {
                           <h6 className="tx-15 font-weight-semibold mb-0">
                             {user.firstName}
                           </h6>
-                          <span className="dropdown-title-text subtext op-6  tx-12">
-                            {storeInfo?.version}
+                          <span className="dropdown-title-text subtext op-6 tx-12">
+                            fe: {SYS_VERSION}
                           </span>
-                          <p className="dropdown-title-text subtext op-6  tx-12">
-                            {storeInfo?.db}
-                          </p>
+                          {backendVersion?.version && (
+                            <span className="dropdown-title-text subtext op-6 tx-12">
+                              bk: {backendVersion.version}
+                            </span>
+                          )}
+                          {backendVersion?.db && (
+                            <p className="dropdown-title-text subtext op-6 tx-12 mb-0">
+                              db: {backendVersion.db}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>

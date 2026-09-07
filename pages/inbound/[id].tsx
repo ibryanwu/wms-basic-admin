@@ -59,7 +59,8 @@ import { Button, ButtonGroup } from '@mui/joy';
 import { useGetAllVendors } from '@/rest/vendor';
 import { useGetAllItems } from '@/rest/items';
 import Select from 'react-select';
-import { toastOptions } from '@/utils/public';
+import { getCreateOrderPath, toastOptions } from '@/utils/public';
+import { getStoreLogoUrl } from '@/lib/sys';
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import { useMe } from '@/rest/auth';
 import { toast } from 'react-toastify';
@@ -250,7 +251,6 @@ const Main = (props: any) => {
   // Use Effect  ----------------------------------------------------
   useEffect(() => {
     clearAllData();
-    routes.replace(routes.asPath); //为了避免页面切换时的缓存，要强制刷新一次页面
     // 滚动到某个Dom 位置时，显示item搜索条
     const handleScroll = () => {
       if (!targetRef.current) {
@@ -374,7 +374,7 @@ const Main = (props: any) => {
       if (saveType.current === 'savenew') {
         clearAllAtom();
         clearAllData();
-        routes.push('/inbound/create');
+        routes.push(getCreateOrderPath('inbound'));
       } else {
         routes.push(`/inbound/${response.data.id}`);
         if (!isCreate) refetchOrder(); // 如果是更新操作则重新获取订单数据
@@ -824,7 +824,7 @@ const Main = (props: any) => {
                 onClick={() => {
                   const pdfDataParams = formatPdfData(inboundOrder?.data);
                   //@ts-ignore
-                  pdfDataParams.storeImageUrl = storeInfo?.logo_url;
+                  pdfDataParams.storeImageUrl = getStoreLogoUrl(storeInfo?.logo_url);
                   pdfOrder(pdfDataParams);
                 }}
                 disabled={type === 'create'}
@@ -1858,7 +1858,7 @@ const Inbound = (props: any) => {
   const routes = useRouter();
   // Values  ----------------------------------------------------
 
-  const { id } = routes.query;
+  const { id, t } = routes.query;
   // UseState  ----------------------------------------------------
   const [type, setType] = useState('');
   // Hooks  ----------------------------------------------------
@@ -1881,7 +1881,13 @@ const Inbound = (props: any) => {
     } else {
       setType('create');
     }
-  }, [id]);
+  }, [id, t]);
+
+  useEffect(() => {
+    if (id === 'create' && !t) {
+      routes.replace(getCreateOrderPath('inbound'));
+    }
+  }, [id, t]);
 
   const refreshData = () => {
     router.replace(router.asPath); // 替换当前路径并重新触发 getServerSideProps
@@ -1890,7 +1896,7 @@ const Inbound = (props: any) => {
   useEffect(() => {
     if (!inboundOrder) return;
     if (!(inboundOrder as { data: any }).data) {
-      routes.push('/inbound/create');
+      routes.push(getCreateOrderPath('inbound'));
     }
   }, [inboundOrder]);
 
@@ -1899,7 +1905,12 @@ const Inbound = (props: any) => {
       {isMe && (
         <>
           {type === 'create' && (
-            <Main type={type} inboundOrder={inboundOrder} id={id} />
+            <Main
+              key={String(t)}
+              type={type}
+              inboundOrder={inboundOrder}
+              id={id}
+            />
           )}
 
           {type === 'edit' &&

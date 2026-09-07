@@ -47,6 +47,7 @@ import {
   DECIMAL_OR_0,
   NUMERIC_GREATER_OR_LESS_0,
 } from '@/lib/constants';
+import { getStoreLogoUrl } from '@/lib/sys';
 import { useAtom } from 'jotai';
 import {
   itemListForSalesAtom,
@@ -733,7 +734,7 @@ const Main = (props: any) => {
                 onClick={() => {
                   const pdfDataParams = formatPdfData(salesOrder?.data);
                   //@ts-ignore
-                  pdfDataParams.storeImageUrl = storeInfo?.logo_url;
+                  pdfDataParams.storeImageUrl = getStoreLogoUrl(storeInfo?.logo_url);
                   pdfOrder(pdfDataParams);
                 }}
                 disabled={type === 'create'}
