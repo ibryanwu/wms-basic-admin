@@ -16,6 +16,18 @@ const nextConfig = {
     path: '/',
   },
   i18n,
+  // Include locale files in serverless bundles so getServerSideProps can read them on Vercel
+  experimental: {
+    outputFileTracingIncludes: {
+      '/outbound/[id]': ['./public/locales/**/*'],
+      '/inbound/[id]': ['./public/locales/**/*'],
+      '/transfer-order/[id]': ['./public/locales/**/*'],
+      '/purchase-order/[id]': ['./public/locales/**/*'],
+      '/purchase-order/drawer/[id]': ['./public/locales/**/*'],
+      '/sales-order/[id]': ['./public/locales/**/*'],
+      '/sales-order/drawer/[id]': ['./public/locales/**/*'],
+    },
+  },
   webpack: (config) => {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;

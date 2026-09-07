@@ -75,14 +75,17 @@ import { convertTransferItemsOptions } from '@/utils/convertToSelectOptions';
 import { getStaticTranslations } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { locale } = context;
-  try {
-    return getStaticTranslations(locale, ['common', 'transfer_order', 'menu']);
-  } catch (error) {
-    console.error('Error ', error);
-  }
-};
+export const getStaticPaths = async ({ locales }: { locales?: string[] }) => ({
+  paths: (locales ?? ['en', 'zh']).map((locale) => ({
+    params: { id: 'create' },
+    locale,
+  })),
+  fallback: 'blocking',
+});
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, ['common', 'transfer_order', 'menu']);
+}
 
 const Main = (props: any) => {
   // Values  ----------------------------------------------------

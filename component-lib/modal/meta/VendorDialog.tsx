@@ -178,7 +178,7 @@ export function VendorDialog(prop: any) {
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header>
           <Modal.Title>
-            {t('lb_vendor')} & {t('lb_customer')} - {formStatus}
+            {t('lb_vendor')} & {t('lb_client')} - {formStatus}
           </Modal.Title>
           <Button variant="" onClick={handleClose}>
             X{' '}

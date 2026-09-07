@@ -45,8 +45,10 @@ import {
   defaultPurItemsDrawerFormValues,
 } from '@/service/purchase';
 import { generateShortUUID } from '@/utils/public';
+import { useTranslation } from 'react-i18next';
 
 export default function EditPurchaseOrderItemsDrawer(props: any) {
+  const { t } = useTranslation('purchase_order');
   const { allItemsOptions, calculate } = props;
   const [itemListDatas, setItemListDatas] = useAtom(itemListAtom);
   const [editingItem, setEditingItem] = useAtom(editItemAtom);
@@ -346,7 +348,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
             setOpenPurItemDrawer(true);
           }}
         >
-          Add Item
+          {t('drawer_add_item')}
         </Button>
         {/* <Button
           variant="outlined"
@@ -396,10 +398,10 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
           >
             <DialogTitle>
               {formStatus === 'create' ? (
-                'Add Item'
+                t('drawer_add_item')
               ) : (
                 <>
-                  Edit Item -
+                  {t('drawer_edit_item')} -
                   <span className="tx-gray-300">{editingItem.row_uuid}</span>
                 </>
               )}
@@ -416,7 +418,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                         {isDuplicate.check && (
                           <span className="bg-danger mg-l-10 text-light pd-l-10 pd-r-10">
                             <strong>Heads up!</strong> I found a duplicate item
-                            at ROW: {isDuplicate.row}
+                            {t('drawer_duplicate_row')} {isDuplicate.row}
                           </span>
                         )}
                       </Form.Label>
@@ -481,7 +483,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                 <Grid container spacing={1}>
                   <Grid xs={6} md={2}>
                     <Form.Group className="form-group">
-                      <Form.Label>*Pur Unit</Form.Label>
+                      <Form.Label>{t('drawer_lb_pur_unit')}</Form.Label>
                       {unitOptions && (
                         <SelectPro
                           key="pur_unit_id"
@@ -504,7 +506,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   <div style={{ display: display.current }}>
                     <Grid xs={6} md={2}>
                       <Form.Group className="form-group">
-                        <Form.Label>*Base Unit</Form.Label>
+                        <Form.Label>{t('drawer_lb_base_unit')}</Form.Label>
                         {unitOptions && (
                           <SelectPro
                             key="base_unit_id"
@@ -530,7 +532,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   <div style={{ display: display.current }}>
                     <Grid md={2}>
                       <Form.Group className="form-group">
-                        <Form.Label>*Exchange Rate(=)</Form.Label>
+                        <Form.Label>{t('drawer_lb_exchange_rate')}</Form.Label>
                         <Form.Control
                           {...register('exchange_rate', {
                             required: true,
@@ -567,7 +569,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   </div>
                   <Grid md={2}>
                     <Form.Group className="form-group">
-                      <Form.Label>Tax Rate % (=)</Form.Label>
+                      <Form.Label>{t('drawer_lb_tax_rate')}</Form.Label>
                       <Form.Control
                         {...register('tax_rate', {
                           required: false,
@@ -600,7 +602,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                 <Grid container spacing={1}>
                   <Grid md={2}>
                     <Form.Group className="form-group">
-                      <Form.Label>*PUR QTY (=)</Form.Label>
+                      <Form.Label>{t('drawer_lb_pur_qty')}</Form.Label>
                       <Form.Control
                         {...register('qty_pur', {
                           required: true,
@@ -640,7 +642,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   </Grid>
                   <Grid md={2}>
                     <Form.Group className="form-group">
-                      <Form.Label>*Pur Price (=)</Form.Label>
+                      <Form.Label>{t('drawer_lb_pur_price')}</Form.Label>
                       <Form.Control
                         {...register('price_pur', {
                           required: true,
@@ -677,7 +679,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   <div style={{ display: display.current }}>
                     <Grid md={2}>
                       <Form.Group className="form-group">
-                        <Form.Label>*BASE QTY</Form.Label>
+                        <Form.Label>{t('drawer_lb_base_qty')}</Form.Label>
                         <Form.Control
                           {...register('qty_base', {
                             required: true,
@@ -706,7 +708,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                     </Grid>
                     <Grid md={2}>
                       <Form.Group className="form-group">
-                        <Form.Label>*Base Price</Form.Label>
+                        <Form.Label>{t('drawer_lb_base_price')}</Form.Label>
                         <Form.Control
                           {...register('price_base', {
                             required: true,
@@ -736,7 +738,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   </div>
                   <Grid md={2}>
                     <Form.Group className="form-group">
-                      <Form.Label>Received Qty</Form.Label>
+                      <Form.Label>{t('drawer_lb_received_qty')}</Form.Label>
                       <Form.Control
                         {...register('received_qty', {
                           required: true,
@@ -822,7 +824,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                             className="custom-control-input"
                           />
                           <span className="custom-control-label custom-control-label-md  tx-17">
-                            Partial Received
+                            {t('drawer_lb_partial_received')}
                           </span>
                         </Form.Label>
                       </Form.Group>
@@ -859,7 +861,7 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   setOpenPurItemDrawer(false);
                 }}
               >
-                Cancel
+                {t('drawer_bt_cancel')}
               </Button>
               <Stack direction="row" gap={3}>
                 <Button
@@ -867,11 +869,11 @@ export default function EditPurchaseOrderItemsDrawer(props: any) {
                   color="success"
                   onClick={handleSubmit(saveAndCreate)}
                 >
-                  Save & Create
+                  {t('drawer_bt_save_create')}
                 </Button>
 
                 <Button className="mg-l-6" type="submit">
-                  Save
+                  {t('bt_save')}
                 </Button>
               </Stack>
             </Stack>

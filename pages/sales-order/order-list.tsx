@@ -35,6 +35,12 @@ import { toast } from 'react-toastify';
 import { useGetWarehouse } from '@/rest/inv';
 import SalesOrderListDataTable from '@/component-lib/data-table/SalesOrderListDT';
 import { convertSalesOrderSeqNo } from '@/service/sales';
+import { getStaticTranslations } from '@/lib/i18n';
+import { useTranslation } from 'react-i18next';
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, ['common', 'sales_order_list', 'menu']);
+}
 
 const Main = () => {
   // Values  -------------------------------------------------
@@ -57,6 +63,8 @@ const Main = () => {
     //values: defaultFormDate,
   });
   // Hooks  --------------------------------------------------
+  const { t } = useTranslation('sales_order_list');
+  const { t: t0 } = useTranslation('common');
   const { mutate: getMe, data: me, isLoading: isLoadingMe, isMe } = useMe();
   const clearAllAtom = useClearAllAtom();
   const { data: warehouseData } = useGetWarehouse({ isActive: true });
@@ -93,9 +101,9 @@ const Main = () => {
     if (deleteRes?.code === 0 && deleteRes.data.affected > 0) {
       //@ts-ignore
       handleSubmit(onSubmit)();
-      toast.success('Order delete successfully');
+      toast.success(t('toast_delete_success'));
     } else {
-      toast.error('Delete order failed');
+      toast.error(t('toast_delete_failed'));
     }
   }, [deleteRes]);
 
@@ -159,7 +167,7 @@ const Main = () => {
       <div className="breadcrumb-header justify-content-between">
         <div className="left-content">
           <span className="main-content-title mg-b-0 mg-b-lg-1">
-            Sales Order List
+            {t('title')}
           </span>
         </div>
 
@@ -169,7 +177,7 @@ const Main = () => {
               className="breadcrumb-item tx-15"
               href="./index.tsx"
             >
-              Sales-order
+              {t('title')}
             </Breadcrumb.Item>
             <Breadcrumb.Item
               className="breadcrumb-item "
@@ -195,7 +203,7 @@ const Main = () => {
                       style={{ zIndex: 999 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Customer</Form.Label>
+                        <Form.Label>{t('lb_vendor')}</Form.Label>
                         {vendorsData?.data && (
                           <SelectPro
                             key="vendor"
@@ -218,7 +226,7 @@ const Main = () => {
                       style={{ zIndex: 9 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Warehouse</Form.Label>
+                        <Form.Label>{t('lb_warehouse')}</Form.Label>
                         {warehouseData?.data && (
                           <SelectPro
                             key="warehouse"
@@ -239,20 +247,20 @@ const Main = () => {
 
                     <Col md={2} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Order No</Form.Label>
+                        <Form.Label>{t('lb_order_no')}</Form.Label>
                         <Form.Control
                           {...register('seq_order_no')}
-                          placeholder="order number"
+                          placeholder={t('ph_order_no')}
                           type="text"
                         />
                       </Form.Group>
                     </Col>
                     <Col md={2} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Invoice No</Form.Label>
+                        <Form.Label>{t('lb_invoice_no')}</Form.Label>
                         <Form.Control
                           {...register('invoice_no')}
-                          placeholder="InvoiceNo"
+                          placeholder={t('ph_invoice_no')}
                           type="text"
                         />
                       </Form.Group>
@@ -260,10 +268,10 @@ const Main = () => {
 
                     <Col md={2} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Batch Number</Form.Label>
+                        <Form.Label>{t('lb_batch_number')}</Form.Label>
                         <Form.Control
                           {...register('batch_number')}
-                          placeholder="Batch"
+                          placeholder={t('ph_batch_number')}
                           type="text"
                         />
                       </Form.Group>
@@ -276,7 +284,7 @@ const Main = () => {
                       style={{ zIndex: 99 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Start Date</Form.Label>
+                        <Form.Label>{t('lb_sales_start_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -300,7 +308,7 @@ const Main = () => {
                       style={{ zIndex: 99 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Order End Date</Form.Label>
+                        <Form.Label>{t('lb_order_end_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -320,7 +328,7 @@ const Main = () => {
 
                     <Col md={4} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Remark</Form.Label>
+                        <Form.Label>{t('lb_remarks')}</Form.Label>
                         <Form.Control
                           {...register('remark')}
                           placeholder=""
@@ -330,7 +338,7 @@ const Main = () => {
                     </Col>
                     <Col md={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Highlight</Form.Label>
+                        <Form.Label>{t('lb_highlight')}</Form.Label>
                         <Form.Control
                           {...register('highlight')}
                           placeholder=""
@@ -344,7 +352,7 @@ const Main = () => {
                           <span className="tx-white">.</span>
                         </Form.Label>
                         <Button type="submit" disabled={isLoading}>
-                          Search
+                          {t0('btn_search')}
                         </Button>
                       </Form.Group>
                     </Col>
@@ -370,7 +378,7 @@ const Main = () => {
                     }}
                   >
                     <i className="fa fa-table mg-r-4"></i>
-                    Export CSV
+                    {t0('btn_export')}
                   </Button>
                 </Stack>
               </Col>

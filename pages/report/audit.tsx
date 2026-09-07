@@ -28,6 +28,16 @@ import { useGetAllItems } from '@/rest/items';
 import InvTranscationsDatatable from '@/component-lib/data-table/InvTranscationsDt';
 import InvReportByItemDt from '@/component-lib/data-table/InvReportByItemDt';
 import { customFilterForSelect } from '@/service/items';
+import { getStaticTranslations } from '@/lib/i18n';
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, [
+    'common',
+    'transactions',
+    'inventory_detail',
+    'menu',
+  ]);
+}
 
 const Main = () => {
   // Values  -------------------------------------------------

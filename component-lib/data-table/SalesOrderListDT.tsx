@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import { useDeletePruchaseOrder } from '@/rest/purchase';
 import { convertSalesOrderSeqNo } from '@/service/sales';
+import { useTranslation } from 'react-i18next';
 //
 const customStylesForDataTable = {
   rows: {
@@ -34,6 +35,7 @@ const customStylesForDataTable = {
 const conditionalRowStyles = [{}];
 
 export default function SalesOrderListDataTable(props: any) {
+  const { t } = useTranslation('sales_order_list');
   const { orderListData } = props;
 
   const routes = useRouter();
@@ -61,7 +63,7 @@ export default function SalesOrderListDataTable(props: any) {
       button: true,
     },
     {
-      name: 'OrderInfo',
+      name: t('dtlb_order_info'),
       width: '30%',
       selector: (row: any) => [row.invoice_no],
       sortable: false,
@@ -74,7 +76,7 @@ export default function SalesOrderListDataTable(props: any) {
         >
           <Stack>
             <span>
-              Order#:
+              {t('dtlb_order_no')}:
               <span className="mg-l-4 mg-r-4 tx-primary tx-16">
                 {row.isVoid ? (
                   <mark>
@@ -84,15 +86,15 @@ export default function SalesOrderListDataTable(props: any) {
                   convertSalesOrderSeqNo(row.seq_order_no)
                 )}
               </span>
-              Invoice#:
+              {t('dtlb_invoice_no')}:
               <span className={`mg-l-4 mg-r-4 tx-primary tx-16`}>
                 {row.isVoid ? <del>{row.invoice_no}</del> : row.invoice_no}
               </span>
-              Batch#:
+              {t('dtlb_batch_no')}:
               <span className=" mg-l-4 mg-r-4 tx-primary tx-16">
                 {row.batch_number}
               </span>{' '}
-              Items:
+              {t('dtlb_items')}:
               <span className=" mg-l-4 mg-r-4 tx-16 tx-medium">
                 {row.salesOrderItems.length}
               </span>{' '}
@@ -101,9 +103,9 @@ export default function SalesOrderListDataTable(props: any) {
               {row.vendor.name}
             </span>
             <span>
-              Order Date:{' '}
+              {t('dtlb_order_date')}:{' '}
               <span className="tx-medium">{row.sales_order_date}</span> ,
-              Received: <span className="tx-medium">{row.received_date}</span>
+              {t('dtlb_received')}: <span className="tx-medium">{row.received_date}</span>
             </span>
             {row.highlight !== undefined && row.highlight && (
               <span className="tx-danger">
@@ -116,7 +118,7 @@ export default function SalesOrderListDataTable(props: any) {
     },
 
     {
-      name: 'Total ',
+      name: t('dtlb_total'),
       width: '15%',
       selector: (row: any) => [row.tax_rate],
       sortable: false,
@@ -128,11 +130,11 @@ export default function SalesOrderListDataTable(props: any) {
                 <div className="d-flex flex-row-reverse">
                   {row.is_promotional_item ? (
                     <>
-                      <span className={clsx('tx-16')}>Total: 0</span>
+                      <span className={clsx('tx-16')}>{t('dtlb_total')}: 0</span>
                     </>
                   ) : (
                     <span className={clsx('tx-16 ')}>
-                      Total:
+                      {t('dtlb_total')}:
                       <span className="mg-l-6">
                         {row.total.total.toFixed(2)}
                       </span>
@@ -143,7 +145,7 @@ export default function SalesOrderListDataTable(props: any) {
                   <div className="d-flex flex-row-reverse">
                     <del>
                       <span>
-                        Total:
+                        {t('dtlb_total')}:
                         <span className="mg-l-6">
                           {row.total.total.toFixed(2)}
                         </span>
@@ -153,7 +155,7 @@ export default function SalesOrderListDataTable(props: any) {
                 )}
                 <div className="d-flex flex-row-reverse">
                   <span className="tx-gray-600">
-                    SubTotal:
+                    {t('dtlb_subtotal')}:
                     <span className="mg-l-6">
                       {row.total.subtotal.toFixed(2)}
                     </span>
@@ -161,13 +163,13 @@ export default function SalesOrderListDataTable(props: any) {
                 </div>
                 <div className="d-flex flex-row-reverse">
                   <span className="tx-gray-600">
-                    Tax:
+                    {t('dtlb_tax')}:
                     <span className="mg-l-6">{row.total.tax.toFixed(2)}</span>
                   </span>
                 </div>
                 <div className="d-flex flex-row-reverse">
                   <span className="tx-gray-600">
-                    Shipping Fee:
+                    {t('dtlb_shipping_fee')}:
                     <span className="mg-l-6">
                       {row.total.shipping_fee.toFixed(2)}
                     </span>
@@ -180,7 +182,7 @@ export default function SalesOrderListDataTable(props: any) {
       ),
     },
     {
-      name: 'Status',
+      name: t('dtlb_status'),
       width: '160px',
       selector: (row: any) => [row.is_finished],
       sortable: false,
@@ -190,19 +192,19 @@ export default function SalesOrderListDataTable(props: any) {
             <div className="wd-40 ">
               {row.is_approved && !row.isVoid && (
                 <span className="mg-l-2 badge bg-success badge-pill me-1 tx-12">
-                  Approved
+                  {t('dtlb_approved')}
                 </span>
               )}
               {!row.is_approved && (
                 <span className="mg-l-2 badge bg-warning badge-pill me-1 tx-12">
-                  Not Approved
+                  {t('dtlb_not_approved')}
                 </span>
               )}
             </div>
             <div className="wd-40 ">
               {row.isVoid && (
                 <span className="mg-l-2 badge bg-danger badge-pill me-1 tx-12">
-                  Void
+                  {t('dtlb_void')}
                 </span>
               )}
             </div>
@@ -211,7 +213,7 @@ export default function SalesOrderListDataTable(props: any) {
       ),
     },
     {
-      name: 'Warehouse',
+      name: t('dtlb_warehouse'),
       width: '200px',
       selector: (row: any) => [row.is_finished],
       sortable: false,
@@ -221,13 +223,13 @@ export default function SalesOrderListDataTable(props: any) {
             <div className="wd-40 ">
               {row.warehouse.name} {row.warehouse.description}
             </div>
-            <div className="wd-40 ">Location: {row.warehouse.location}</div>
+            <div className="wd-40 ">{t('dtlb_location')}: {row.warehouse.location}</div>
           </Stack>
         </div>
       ),
     },
     {
-      name: 'Remark',
+      name: t('dtlb_remark'),
 
       selector: (row: any) => [row.paymentremark],
       sortable: false,
@@ -236,14 +238,14 @@ export default function SalesOrderListDataTable(props: any) {
           <Stack>
             <span>{row.print_remark !== '' ? `${row.remark}` : null} </span>
             <span>
-              {row.print_remark !== '' ? `Print:${row.print_remark}` : null}
+              {row.print_remark !== '' ? `${t('dtlb_print')}:${row.print_remark}` : null}
             </span>
           </Stack>
         </div>
       ),
     },
     {
-      name: 'Op',
+      name: t('dtlb_op'),
       width: '8%',
       sortable: false,
       cell: (row: any) => {

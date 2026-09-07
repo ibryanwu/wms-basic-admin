@@ -1,5 +1,6 @@
 {
   "title": "Inbound Request List",
+  "title_outbound": "Outbound Request List",
 
   "Label---------------------------------": "",
   "lb_vendor": "Vendor",

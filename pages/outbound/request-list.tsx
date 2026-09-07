@@ -39,6 +39,12 @@ import {
   useDeleteOutboundRequest,
   useSearchOutboundRequestList,
 } from '@/rest/outbound-request';
+import { getStaticTranslations } from '@/lib/i18n';
+import { useTranslation } from 'react-i18next';
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, ['common', 'request_list', 'menu']);
+}
 
 const Main = () => {
   // Values  -------------------------------------------------
@@ -75,6 +81,8 @@ const Main = () => {
     defaultValues: defaultSearchData,
   });
   // Hooks  --------------------------------------------------
+  const { t: t0 } = useTranslation('common');
+  const { t } = useTranslation('request_list');
   const { data: vendorsData } = useGetAllVendors({
     type: 2,
     isOnlyOwnItem: true,
@@ -124,7 +132,7 @@ const Main = () => {
       <div className="breadcrumb-header justify-content-between">
         <div className="left-content">
           <span className="main-content-title mg-b-0 mg-b-lg-1">
-            Inbound Request List
+            {t('title_outbound')}
           </span>
         </div>
 
@@ -134,7 +142,7 @@ const Main = () => {
               className="breadcrumb-item tx-15"
               href="./index.tsx"
             >
-              Outbound-Request
+              {t('title_outbound')}
             </Breadcrumb.Item>
             <Breadcrumb.Item
               className="breadcrumb-item "
@@ -160,7 +168,7 @@ const Main = () => {
                       style={{ zIndex: 999 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Customer</Form.Label>
+                        <Form.Label>{t('lb_vendor')}</Form.Label>
                         {vendorsData?.data && (
                           <SelectPro
                             key="vendor"
@@ -186,7 +194,7 @@ const Main = () => {
                       style={{ zIndex: 99 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Request Start Date</Form.Label>
+                        <Form.Label>{t('lb_request_start_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -210,7 +218,7 @@ const Main = () => {
                       style={{ zIndex: 99 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>End Date</Form.Label>
+                        <Form.Label>{t('lb_request_end_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -229,7 +237,7 @@ const Main = () => {
                     </Col>
                     <Col md={4} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Remark</Form.Label>
+                        <Form.Label>{t('lb_remarks')}</Form.Label>
                         <Form.Control
                           {...register('remark')}
                           placeholder=""
@@ -251,7 +259,7 @@ const Main = () => {
                               resetSearch();
                             }}
                           >
-                            Reset
+                            {t0('btn_reset')}
                           </Button>
                         </Form.Group>
                         <Form.Group className="form-group">
@@ -263,7 +271,7 @@ const Main = () => {
                             type="submit"
                             disabled={isLoading}
                           >
-                            Search
+                            {t0('btn_search')}
                           </Button>
                         </Form.Group>
                       </Row>
@@ -289,7 +297,7 @@ const Main = () => {
                     }}
                   >
                     <i className="fa fa-table mg-r-4"></i>
-                    Export CSV
+                    {t0('btn_export')}
                   </Button>
                 </Stack>
               </Col>

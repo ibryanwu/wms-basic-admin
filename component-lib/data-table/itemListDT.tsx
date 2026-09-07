@@ -11,6 +11,7 @@ import { Stack } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 //
 const customStylesForDataTable = {
@@ -69,6 +70,7 @@ const conditionalRowStyles = [
 
 // 这是旧进货单显示单据明细item的组件 ，停用
 export default function ItemListDataTable(props: any) {
+  const { t } = useTranslation('purchase_order');
   const [itemListDatas, setItemListDatas] = useAtom(itemListAtom);
   const [_edit, setEditItem] = useAtom(editItemAtom);
   const [_open, setOpenPurItemDrawer] = useAtom(openPurItemDrawerAtom);
@@ -103,7 +105,7 @@ export default function ItemListDataTable(props: any) {
       button: true,
     },
     {
-      name: 'Items',
+      name: t('dtlb_items'),
       width: '300px',
       selector: (row: any) => [row.item.plu],
       sortable: false,
@@ -119,7 +121,7 @@ export default function ItemListDataTable(props: any) {
             {row.is_promotional_item && (
               <div className="wd-40">
                 <span className="badge bg-warning badge-pill me-1 ">
-                  Promotional
+                  {t('dtlb_promotional')}
                 </span>
               </div>
             )}
@@ -137,7 +139,7 @@ export default function ItemListDataTable(props: any) {
       ),
     },
     {
-      name: 'Qty(Pur)',
+      name: t('dtlb_qty_pur'),
       width: '200px',
       selector: (row: any) => [row.qty_pur],
       sortable: false,
@@ -160,8 +162,8 @@ export default function ItemListDataTable(props: any) {
             </div>
             {row.is_partial_received && (
               <Stack direction="vertical">
-                <span className="badge bg-warning me-1">Partial Received</span>
-                <span> Received QTY {row.received_qty}</span>
+                <span className="badge bg-warning me-1">{t('dtlb_partial_received')}</span>
+                <span> {t('dtlb_received_qty')} {row.received_qty}</span>
               </Stack>
             )}
           </Stack>
@@ -169,7 +171,7 @@ export default function ItemListDataTable(props: any) {
       ),
     },
     {
-      name: 'Unit Price',
+      name: t('dtlb_unit_price'),
       width: '200px',
       selector: (row: any) => [row.price_pur],
       sortable: false,
@@ -194,11 +196,11 @@ export default function ItemListDataTable(props: any) {
               <Stack>
                 <Divider />
                 <span>
-                  Cost: ${row.promotional_allocated_cost_pur.toFixed(2)}/{' '}
+                  {t('dtlb_cost')}: ${row.promotional_allocated_cost_pur.toFixed(2)}/{' '}
                   {row.pur_unit_id.name}
                 </span>
                 <span>
-                  CostUnit: $
+                  {t('dtlb_cost_unit')}: $
                   {(
                     row.promotional_allocated_cost_pur /
                     parseFloat(row.exchange_rate)
@@ -212,7 +214,7 @@ export default function ItemListDataTable(props: any) {
       ),
     },
     {
-      name: 'Total ',
+      name: t('dtlb_total'),
       width: '200px',
       selector: (row: any) => [row.tax_rate],
       sortable: false,
@@ -224,11 +226,11 @@ export default function ItemListDataTable(props: any) {
                 <div className="d-flex flex-row-reverse">
                   {row.is_promotional_item ? (
                     <>
-                      <span className={clsx('tx-16')}>Total: 0</span>
+                      <span className={clsx('tx-16')}>{t('dtlb_total')}: 0</span>
                     </>
                   ) : (
                     <span className={clsx('tx-16 ')}>
-                      Total:
+                      {t('dtlb_total')}:
                       <span className="mg-l-6">
                         {row.total.total.toFixed(2)}
                       </span>
@@ -239,7 +241,7 @@ export default function ItemListDataTable(props: any) {
                   <div className="d-flex flex-row-reverse">
                     <del>
                       <span>
-                        Total:
+                        {t('dtlb_total')}:
                         <span className="mg-l-6">
                           {row.total.total.toFixed(2)}
                         </span>
@@ -249,7 +251,7 @@ export default function ItemListDataTable(props: any) {
                 )}
                 <div className="d-flex flex-row-reverse">
                   <span className="tx-gray-600">
-                    SubTotal:
+                    {t('lb_subtotal')}:
                     <span className="mg-l-6">
                       {row.total.subtotal.toFixed(2)}
                     </span>
@@ -257,7 +259,7 @@ export default function ItemListDataTable(props: any) {
                 </div>
                 <div className="d-flex flex-row-reverse">
                   <span className="tx-gray-600">
-                    Tax:
+                    {t('lb_tax')}:
                     <span className="mg-l-6">{row.total.tax.toFixed(2)}</span>
                   </span>
                 </div>
@@ -268,7 +270,7 @@ export default function ItemListDataTable(props: any) {
       ),
     },
     {
-      name: 'Op',
+      name: t('dtlb_op'),
       width: '6%',
       sortable: false,
       cell: (row: any) => (
@@ -281,14 +283,11 @@ export default function ItemListDataTable(props: any) {
               //如果不是赠品，判断是否使用过
               if (!row.is_promotional_item) {
                 if (row.promotional_relationship_value_percentages > 0) {
-                  toast.error(
-                    'This Item has Promotional or Gift Item, please delete Promotional Item first.',
-                    {
-                      position: 'top-center',
-                      theme: 'colored',
-                      autoClose: 8000,
-                    },
-                  );
+                  toast.error(t('drawer_toast_promotional_delete'), {
+                    position: 'top-center',
+                    theme: 'colored',
+                    autoClose: 8000,
+                  });
                   return;
                 }
               }

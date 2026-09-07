@@ -13,7 +13,7 @@ import { toastOptions } from '@/utils/public';
 import { useTranslation } from 'react-i18next';
 
 export function WarehouseDialog(prop: any) {
-  const { t } = useTranslation('vendor');
+  const { t } = useTranslation('warehouse');
   const { t: t0 } = useTranslation('common');
   const { editingItem, showAddBt, setEditItem } = prop; //编辑时用来初始化数据的
   const handleClose = () => setShow(false);

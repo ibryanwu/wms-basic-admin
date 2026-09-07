@@ -78,6 +78,26 @@ import { ConfirmModal } from '@/component-lib/modal/confirm-modal';
 import { convertSalesOrderSeqNo } from '@/service/sales';
 import { ItemDialog } from '@/component-lib/modal/meta/ItemDialog';
 import { VendorDialog } from '@/component-lib/modal/meta/VendorDialog';
+import { getStaticTranslations } from '@/lib/i18n';
+import { useTranslation } from 'react-i18next';
+
+export const getStaticPaths = async ({ locales }: { locales?: string[] }) => ({
+  paths: (locales ?? ['en', 'zh']).map((locale) => ({
+    params: { id: 'create' },
+    locale,
+  })),
+  fallback: 'blocking',
+});
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, [
+    'common',
+    'purchase_order',
+    'menu',
+    'items',
+    'vendor',
+  ]);
+}
 
 const Main = (props: any) => {
   // Auth ----------------------------------------------------------------
@@ -139,6 +159,8 @@ const Main = (props: any) => {
   });
 
   // Hooks  ---------------------------------------------------------
+  const { t: t0 } = useTranslation('common');
+  const { t } = useTranslation('purchase_order');
   const routes = useRouter();
   const clearAllAtom = useClearAllAtom();
   const { mutate: getMe, data: me, isLoading: isLoadingMe, isMe } = useMe();
@@ -309,7 +331,7 @@ const Main = (props: any) => {
         routes.push('/purchase-order/create');
       } else {
         routes.push(`/purchase-order/${createdOrderRes.data}`);
-        toast.success('Order created successfully');
+        toast.success(t('toast_created_success'));
       }
     } else {
       toast.error(createdOrderRes?.msg);
@@ -324,7 +346,7 @@ const Main = (props: any) => {
         routes.push(`/purchase-order/${updateOrderRes.data}`);
         refetchOrder();
       }
-      toast.success('Order update successfully!');
+      toast.success(t('toast_update_success'));
     } else {
       toast.error(createdOrderRes?.msg);
     }
@@ -333,7 +355,7 @@ const Main = (props: any) => {
   useEffect(() => {
     if (updateStatusRes?.code === 0) {
       if (updateStatusRes.data) {
-        toast.success('Update order status successfully');
+        toast.success(t('toast_status_success'));
         refetchOrder();
       }
     }
@@ -551,7 +573,7 @@ const Main = (props: any) => {
         updateOrder(allData);
       }
     } else {
-      toast.error('Please add at least one item');
+      toast.error(t('toast_check_items'));
       return;
     }
   };
@@ -651,7 +673,7 @@ const Main = (props: any) => {
             type === 'create' ? isLoadingCreateOrder : isLoadingUpdateOrder
           }
         >
-          {isLoadingCreateOrder || isLoadingUpdateOrder ? 'Saving...' : 'Save'}
+          {isLoadingCreateOrder || isLoadingUpdateOrder ? t('bt_saving') : t('bt_save')}
         </Button>
 
         <Button
@@ -707,9 +729,9 @@ const Main = (props: any) => {
           setConfirmModalShow(false);
         }}
         info={{
-          title: 'Confirm Approve Order',
-          body: 'Please double-check this order. After approval, the inventory will be changed!',
-          buttonName: 'Approve',
+          title: t('md_approve_confirm_title'),
+          body: t('md_approve_confirm_body'),
+          buttonName: t('md_approve_confirm_button'),
         }}
       />
       <ConfirmModal
@@ -721,16 +743,16 @@ const Main = (props: any) => {
           setVoidConfirmModalShow(false);
         }}
         info={{
-          title: 'Confirm VOID this Order',
+          title: t('md_void_confirm_title'),
           body: (
             <span>
-              Please confirm you will{' '}
-              <span className="tx-16 text-danger">VOID this Order</span> . After
-              VOID, the inventory will be changed and{' '}
-              <span className="tx-16 text-danger">Can Not be Revoked!</span>
+              {t('md_void_confirm_body_prefix')}{' '}
+              <span className="tx-16 text-danger">{t('md_void_confirm_body_highlight')}</span>{' '}
+              {t('md_void_confirm_body_suffix')}{' '}
+              <span className="tx-16 text-danger">{t('md_void_confirm_body_revoke')}</span>
             </span>
           ),
-          buttonName: 'VOID this Order',
+          buttonName: t('md_void_confirm_button'),
         }}
       />
       <Seo title={'Product Form'} /> {/* <!-- breadcrumb --> */}
@@ -738,13 +760,13 @@ const Main = (props: any) => {
         <div className="left-content ">
           <div className="d-flex flex-row align-items-center">
             <span className="main-content-title mg-b-0 mg-b-lg-1">
-              Purchase Order{' '}
+              {t('title')}{' '}
               {orderSeqNo !== '' ? convertPurOrderSeqNo(orderSeqNo) : ''}
             </span>
             {isApproved && !isVoid && (
               <>
                 <span className="badge tx-16 badge-pill bg-indigo  mg-l-10 mg-r-20">
-                  Approved
+                  {t('approved')}
                 </span>
 
                 <Button
@@ -757,13 +779,13 @@ const Main = (props: any) => {
                   }}
                   disabled={type === 'create'}
                 >
-                  {isUpdateStatusRes || isUpdateStatusRes ? 'Void...' : 'Void'}
+                  {isUpdateStatusRes || isUpdateStatusRes ? t('bt_voiding') : t('bt_void')}
                 </Button>
               </>
             )}
             {isVoid && (
               <span className="badge tx-16 badge-pill bg-danger  mg-l-10 mg-r-20">
-                Void
+                {t('void')}
               </span>
             )}
             <div className="mg-l-10 bd-s pd-l-10">
@@ -780,7 +802,7 @@ const Main = (props: any) => {
                 }}
                 disabled={type === 'create'}
               >
-                {isLoadingOrderPdf ? 'Printing...' : 'Print'}
+                {isLoadingOrderPdf ? t('bt_printing') : t('bt_print')}
               </Button>
             </div>
           </div>
@@ -792,7 +814,7 @@ const Main = (props: any) => {
               className="breadcrumb-item tx-15"
               href="/purchase-order/order-list"
             >
-              Purchase Order
+              {t('title')}
             </Breadcrumb.Item>
             <Breadcrumb.Item
               className="breadcrumb-item "
@@ -825,8 +847,8 @@ const Main = (props: any) => {
                             }}
                             style={{ cursor: 'pointer' }}
                           >
-                            Vendor{' '}
-                            <span className=" text-success">{'[NEW]'}</span>
+                            {t('lb_vendor')}{' '}
+                            <span className=" text-success">{t('lb_new')}</span>
                           </a>
                         </Form.Label>
                         <>
@@ -856,7 +878,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 891 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Warehouse</Form.Label>
+                        <Form.Label>{t('lb_warehouse')}</Form.Label>
                         {warehouseData?.data && (
                           <SelectPro
                             key="warehouse"
@@ -887,10 +909,10 @@ const Main = (props: any) => {
                     </Col> */}
                     <Col md={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Invoice No</Form.Label>
+                        <Form.Label>{t('lb_invoice_no')}</Form.Label>
                         <Form.Control
                           {...register('invoice_no')}
-                          placeholder="Resource"
+                          placeholder={t('ph_invoice_no')}
                           type="text"
                         />
                       </Form.Group>
@@ -898,10 +920,10 @@ const Main = (props: any) => {
 
                     <Col md={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Batch Number</Form.Label>
+                        <Form.Label>{t('lb_batch_number')}</Form.Label>
                         <Form.Control
                           {...register('batch_number')}
-                          placeholder="批次号"
+                          placeholder={t('ph_batch_number')}
                           type="text"
                         />
                       </Form.Group>
@@ -914,7 +936,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 889 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Purchased Date</Form.Label>
+                        <Form.Label>{t('lb_purchased_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -938,7 +960,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 888 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Received Date</Form.Label>
+                        <Form.Label>{t('lb_received_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -957,7 +979,7 @@ const Main = (props: any) => {
                     </Col>
                     <Col xs={6} lg={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Shipping Fee</Form.Label>
+                        <Form.Label>{t('lb_shipping_fee')}</Form.Label>
                         <Form.Control
                           {...register('shipping_fee', {
                             required: false,
@@ -969,7 +991,7 @@ const Main = (props: any) => {
                               }
                             },
                           })}
-                          placeholder="Shipping Fee"
+                          placeholder={t('ph_shipping_fee')}
                           type="text"
                           style={{ textAlign: 'right' }}
                           onChange={(e) => {
@@ -998,7 +1020,7 @@ const Main = (props: any) => {
                       <>
                         <Col xs={6} lg={3} className=" mg-t-10 mg-md-t-0">
                           <Form.Group className="form-group">
-                            <Form.Label>Discount Amount</Form.Label>
+                            <Form.Label>{t('lb_discount_amount')}</Form.Label>
                             <Form.Control
                               {...register('discount_amount', {
                                 required: false,
@@ -1011,7 +1033,7 @@ const Main = (props: any) => {
                                   }
                                 },
                               })}
-                              placeholder="Discount Rate"
+                              placeholder={t('ph_discount_rate')}
                               type="text"
                               style={{ textAlign: 'right' }}
                               onChange={(val) => {
@@ -1131,7 +1153,7 @@ const Main = (props: any) => {
                             <Row className="bg-gray-100 pd-b-6">
                               <Col xs={6} md={3} className=" pd-b-6 ">
                                 <Form.Label htmlFor={`item-${index}`}>
-                                  Qty{'('}Return input like -3{')'}
+                                  {t('itemlb_qty')}{t('itemlb_qty_hint')}
                                 </Form.Label>
                                 <Form.Control
                                   {...register(`items.${index}.qty_pur`, {
@@ -1175,7 +1197,7 @@ const Main = (props: any) => {
                               </Col>
                               <Col xs={6} md={3} className="  ">
                                 <Form.Label htmlFor={`item-${index}`}>
-                                  Price{' '}
+                                  {t('itemlb_price')}{' '}
                                 </Form.Label>
                                 <Form.Control
                                   {...register(`items.${index}.price_pur`, {
@@ -1217,7 +1239,7 @@ const Main = (props: any) => {
                               </Col>
                               <Col xs={6} md={3} className="  ">
                                 <Form.Label htmlFor={`item-${index}`}>
-                                  Tax{' '}
+                                  {t('itemlb_tax_rate')}{' '}
                                 </Form.Label>
                                 <Form.Control
                                   {...register(`items.${index}.tax_rate`, {
@@ -1260,7 +1282,7 @@ const Main = (props: any) => {
                               </Col>
                               <Col xs={6} md={3} className="  ">
                                 <Form.Label htmlFor={`item-${index}`}>
-                                  Remarks{' '}
+                                  {t('itemlb_remarks')}{' '}
                                 </Form.Label>
                                 <Form.Control
                                   {...register(`items.${index}.remark`)}
@@ -1282,7 +1304,7 @@ const Main = (props: any) => {
           <Col md={3}>
             <Card className="card custom-card">
               <Card.Header className="card-header">
-                <Card.Title>Amount</Card.Title>
+                <Card.Title>{t('lb_amount')}</Card.Title>
                 <Card.Body>
                   <Stack direction="vertical" gap={1}>
                     <Row>
@@ -1291,7 +1313,7 @@ const Main = (props: any) => {
                         className="align-self-end"
                         style={{ textAlign: 'right' }}
                       >
-                        Subtotal:
+                        {t('lb_subtotal')}:
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 14 }}>
                         {orderTotal.subtotal.toFixed(2)}
@@ -1321,7 +1343,7 @@ const Main = (props: any) => {
                         className="align-self-end"
                         style={{ textAlign: 'right' }}
                       >
-                        Tax:
+                        {t('lb_tax')}:
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 14 }}>
                         {orderTotal.tax.toFixed(2)}
@@ -1349,7 +1371,7 @@ const Main = (props: any) => {
                           className="align-self-end "
                           style={{ textAlign: 'right' }}
                         >
-                          Shipping Fee:
+                          {t('lb_shipping_fee')}:
                         </Col>
                         <Col
                           md={6}
@@ -1366,7 +1388,7 @@ const Main = (props: any) => {
                         className="align-self-center "
                         style={{ textAlign: 'right' }}
                       >
-                        Total:
+                        {t('lb_total')}:
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 20 }}>
                         {orderTotal.total.toFixed(2)}
@@ -1379,11 +1401,11 @@ const Main = (props: any) => {
             {1 > 2 && (
               <Card className="card custom-card">
                 <Card.Header className="card-header">
-                  <Card.Title>Payment</Card.Title>
+                  <Card.Title>{t('lb_payment')}</Card.Title>
                   <Card.Body>
                     <Stack direction="vertical" gap={3}>
                       <div>
-                        <Form.Label>Payment Method</Form.Label>
+                        <Form.Label>{t('lb_payment_method')}</Form.Label>
                         {paymentMethodOptions && (
                           <SelectPro
                             key="payment_method"
@@ -1400,7 +1422,7 @@ const Main = (props: any) => {
                         )}
                       </div>
                       <div>
-                        <Form.Label>Payment Statue</Form.Label>
+                        <Form.Label>{t('lb_payment_status')}</Form.Label>
                         {paymentStatusOptions && (
                           <SelectPro
                             key="payment_status"
@@ -1419,7 +1441,7 @@ const Main = (props: any) => {
                       <textarea
                         {...register('payment_remark')}
                         className="form-control "
-                        placeholder="Remarks"
+                        placeholder={t('ph_remarks')}
                         rows={2}
                       />
                     </Stack>
@@ -1430,25 +1452,25 @@ const Main = (props: any) => {
 
             <Card className="card custom-card">
               <Card.Header className="card-header">
-                <Card.Title>Remarks</Card.Title>
+                <Card.Title>{t('lb_remarks')}</Card.Title>
                 <Card.Body>
                   <Stack direction="vertical" gap={3}>
                     <textarea
                       {...register('remark')}
                       className="form-control "
-                      placeholder="Remark"
+                      placeholder={t('ph_remarks')}
                       rows={2}
                     />
                     <textarea
                       {...register('highlight')}
                       className="form-control "
-                      placeholder="Highlight on List"
+                      placeholder={t('ph_highlight')}
                       rows={2}
                     />
                     <textarea
                       {...register('print_remark')}
                       className="form-control "
-                      placeholder="Print_remark"
+                      placeholder={t('ph_print_remark')}
                       rows={2}
                     />
                   </Stack>

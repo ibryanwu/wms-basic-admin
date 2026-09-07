@@ -88,18 +88,24 @@ import {
 import { customFilterForSelect } from '@/service/items';
 import { getStaticTranslations } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { parse } from 'cookie';
-import { AUTH_TOKEN_KEY } from '../../lib/constants';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { locale } = context;
-  try {
-    return getStaticTranslations(locale, ['common', 'inbound_order', 'menu']);
-  } catch (error) {
-    console.error('Error ', error);
-  }
-};
+export const getStaticPaths = async ({ locales }: { locales?: string[] }) => ({
+  paths: (locales ?? ['en', 'zh']).map((locale) => ({
+    params: { id: 'create' },
+    locale,
+  })),
+  fallback: 'blocking',
+});
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, [
+    'common',
+    'inbound_order',
+    'menu',
+    'items',
+    'vendor',
+  ]);
+}
 
 const Main = (props: any) => {
   // Values  ----------------------------------------------------

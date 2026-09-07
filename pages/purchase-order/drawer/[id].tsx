@@ -54,6 +54,26 @@ import { toast } from 'react-toastify';
 import { ItotalAmount } from '@/types/purchase';
 import { useGetWarehouse } from '@/rest/inv';
 import { ConfirmModal } from '@/component-lib/modal/confirm-modal';
+import { getStaticTranslations } from '@/lib/i18n';
+import { useTranslation } from 'react-i18next';
+
+export const getStaticPaths = async ({ locales }: { locales?: string[] }) => ({
+  paths: (locales ?? ['en', 'zh']).map((locale) => ({
+    params: { id: 'create' },
+    locale,
+  })),
+  fallback: 'blocking',
+});
+
+export async function getStaticProps({ locale }: { locale: string }) {
+  return getStaticTranslations(locale, [
+    'common',
+    'purchase_order',
+    'menu',
+    'items',
+    'vendor',
+  ]);
+}
 
 const Main = (props: any) => {
   // Values  ----------------------------------------------------
@@ -93,6 +113,7 @@ const Main = (props: any) => {
     values: defaultFormDate,
   });
   // Hooks  ---------------------------------------------------------
+  const { t } = useTranslation('purchase_order');
   const routes = useRouter();
   const clearAllAtom = useClearAllAtom();
   const { mutate: getMe, data: me, isLoading: isLoadingMe, isMe } = useMe();
@@ -195,7 +216,7 @@ const Main = (props: any) => {
   useEffect(() => {
     if (createdOrderRes?.code === 0) {
       routes.push(`/purchase-order/${createdOrderRes.data}`);
-      toast.success('Order created successfully');
+      toast.success(t('toast_created_success'));
     } else {
       toast.error(createdOrderRes?.msg);
     }
@@ -204,7 +225,7 @@ const Main = (props: any) => {
   useEffect(() => {
     if (updateOrderRes?.code === 0) {
       routes.push(`/purchase-order/${updateOrderRes.data}`);
-      toast.success('Order update successfully');
+      toast.success(t('toast_update_success'));
     } else {
       toast.error(createdOrderRes?.msg);
     }
@@ -214,7 +235,7 @@ const Main = (props: any) => {
     console.log('updateStatusRes', updateStatusRes);
     if (updateStatusRes?.code === 0) {
       if (updateStatusRes.data) {
-        toast.success('Update order status successfully');
+        toast.success(t('toast_status_success'));
         setIsApproved(true);
       }
     }
@@ -262,7 +283,7 @@ const Main = (props: any) => {
         updateOrder(allData);
       }
     } else {
-      toast.error('Please add at least one item');
+      toast.error(t('toast_check_items'));
       return;
     }
     //
@@ -278,24 +299,24 @@ const Main = (props: any) => {
           setConfirmModalShow(false);
         }}
         info={{
-          title: 'Confirm Approve Order',
-          body: 'Please double-check this order. After approval, the inventory will be changed and cannot be revoked!',
-          buttonName: 'Approve',
+          title: t('md_approve_confirm_title'),
+          body: t('md_approve_confirm_body_drawer'),
+          buttonName: t('md_approve_confirm_button'),
         }}
       />
       <Seo title={'Product Form'} /> {/* <!-- breadcrumb --> */}
       <div className="breadcrumb-header justify-content-between">
         <div className="left-content">
           <span className="main-content-title mg-b-0 mg-b-lg-1">
-            Purchase Order{' '}
+            {t('title')}{' '}
             {orderSeqNo !== '' ? `P${String(orderSeqNo).padStart(5, '0')}` : ''}
             {isApproved && (
               <span className="badge badge-pill bg-secondary me-1">
-                Approved
+                {t('approved')}
               </span>
             )}
           </span>
-          {isLoadingCalculate ? <span>Calculating ...</span> : null}
+          {isLoadingCalculate ? <span>{t('bt_calculating')}</span> : null}
         </div>
         <Row>
           {!isApproved && (
@@ -313,8 +334,8 @@ const Main = (props: any) => {
                 }
               >
                 {isLoadingCreateOrder || isLoadingUpdateOrder
-                  ? 'Saving...'
-                  : 'Save'}
+                  ? t('bt_saving')
+                  : t('bt_save')}
               </Button>
 
               <Button
@@ -335,8 +356,8 @@ const Main = (props: any) => {
                 }
               >
                 {isLoadingCreateOrder || isLoadingUpdateOrder
-                  ? 'Saving...'
-                  : 'Save & Create New'}
+                  ? t('bt_saving')
+                  : t('bt_save_create_new')}
               </Button>
 
               <Button
@@ -349,8 +370,8 @@ const Main = (props: any) => {
                 disabled={type === 'create'}
               >
                 {isUpdateStatusRes || isUpdateStatusRes
-                  ? 'Approving...'
-                  : 'Approve'}
+                  ? t('bt_approving')
+                  : t('bt_approve')}
               </Button>
             </ButtonGroup>
           )}
@@ -361,7 +382,7 @@ const Main = (props: any) => {
               className="breadcrumb-item tx-15"
               href="./index.tsx"
             >
-              Purchase Order
+              {t('title')}
             </Breadcrumb.Item>
             <Breadcrumb.Item
               className="breadcrumb-item "
@@ -387,7 +408,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 999 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Vendor</Form.Label>
+                        <Form.Label>{t('lb_vendor')}</Form.Label>
                         {vendorsData?.data && (
                           <SelectPro
                             key="vendor"
@@ -411,7 +432,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 999 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Warehouse</Form.Label>
+                        <Form.Label>{t('lb_warehouse')}</Form.Label>
                         {warehouseData?.data && (
                           <SelectPro
                             key="warehouse"
@@ -442,10 +463,10 @@ const Main = (props: any) => {
                     </Col> */}
                     <Col md={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Invoice No</Form.Label>
+                        <Form.Label>{t('lb_invoice_no')}</Form.Label>
                         <Form.Control
                           {...register('invoice_no')}
-                          placeholder="Resource"
+                          placeholder={t('ph_invoice_no')}
                           type="text"
                         />
                       </Form.Group>
@@ -453,10 +474,10 @@ const Main = (props: any) => {
 
                     <Col md={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Batch Number</Form.Label>
+                        <Form.Label>{t('lb_batch_number')}</Form.Label>
                         <Form.Control
                           {...register('batch_number')}
-                          placeholder="批次号"
+                          placeholder={t('ph_batch_number')}
                           type="text"
                         />
                       </Form.Group>
@@ -469,7 +490,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 888 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Purchased Date</Form.Label>
+                        <Form.Label>{t('lb_purchased_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -491,7 +512,7 @@ const Main = (props: any) => {
                       style={{ zIndex: 888 }}
                     >
                       <Form.Group className="form-group">
-                        <Form.Label>Received Date</Form.Label>
+                        <Form.Label>{t('lb_received_date')}</Form.Label>
                         <InputGroup className="input-group reactdate-pic">
                           <InputGroup.Text className="input-group-text">
                             <i className="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
@@ -508,7 +529,7 @@ const Main = (props: any) => {
                     </Col>
                     <Col xs={6} lg={3} className=" mg-t-10 mg-md-t-0">
                       <Form.Group className="form-group">
-                        <Form.Label>Shipping Fee</Form.Label>
+                        <Form.Label>{t('lb_shipping_fee')}</Form.Label>
                         <Form.Control
                           {...register('shipping_fee', {
                             required: false,
@@ -520,7 +541,7 @@ const Main = (props: any) => {
                               }
                             },
                           })}
-                          placeholder="Shipping Fee"
+                          placeholder={t('ph_shipping_fee')}
                           type="text"
                           style={{ textAlign: 'right' }}
                           onChange={(val) => {
@@ -545,7 +566,7 @@ const Main = (props: any) => {
                       <>
                         <Col xs={6} lg={3} className=" mg-t-10 mg-md-t-0">
                           <Form.Group className="form-group">
-                            <Form.Label>Discount Amount</Form.Label>
+                            <Form.Label>{t('lb_discount_amount')}</Form.Label>
                             <Form.Control
                               {...register('discount_amount', {
                                 required: false,
@@ -558,7 +579,7 @@ const Main = (props: any) => {
                                   }
                                 },
                               })}
-                              placeholder="Discount Rate"
+                              placeholder={t('ph_discount_rate')}
                               type="text"
                               style={{ textAlign: 'right' }}
                               onChange={(val) => {
@@ -601,7 +622,7 @@ const Main = (props: any) => {
           <Col md={3}>
             <Card className="card custom-card">
               <Card.Header className="card-header">
-                <Card.Title>Amount</Card.Title>
+                <Card.Title>{t('lb_amount')}</Card.Title>
                 <Card.Body>
                   <Stack direction="vertical" gap={1}>
                     <Row>
@@ -610,7 +631,7 @@ const Main = (props: any) => {
                         className="align-self-end"
                         style={{ textAlign: 'right' }}
                       >
-                        Subtotal:
+                        {t('lb_subtotal')}:
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 14 }}>
                         {orderTotal.subtotal.toFixed(2)}
@@ -623,7 +644,7 @@ const Main = (props: any) => {
                           className="align-self-end"
                           style={{ textAlign: 'right' }}
                         >
-                          Promo:
+                          {t('lb_promo')}
                         </Col>
                         <Col
                           md={6}
@@ -640,7 +661,7 @@ const Main = (props: any) => {
                         className="align-self-end"
                         style={{ textAlign: 'right' }}
                       >
-                        Tax:
+                        {t('lb_tax')}:
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 14 }}>
                         {orderTotal.tax.toFixed(2)}
@@ -652,7 +673,7 @@ const Main = (props: any) => {
                         className="align-self-end text-danger"
                         style={{ textAlign: 'right' }}
                       >
-                        Return:
+                        {t('lb_return')}
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 14 }}>
                         <span className="text-danger">
@@ -667,7 +688,7 @@ const Main = (props: any) => {
                         className="align-self-center "
                         style={{ textAlign: 'right' }}
                       >
-                        Total:
+                        {t('lb_total')}:
                       </Col>
                       <Col md={6} style={{ textAlign: 'right', fontSize: 20 }}>
                         {orderTotal.total.toFixed(2)}
@@ -680,11 +701,11 @@ const Main = (props: any) => {
             {1 > 2 && (
               <Card className="card custom-card">
                 <Card.Header className="card-header">
-                  <Card.Title>Payment</Card.Title>
+                  <Card.Title>{t('lb_payment')}</Card.Title>
                   <Card.Body>
                     <Stack direction="vertical" gap={3}>
                       <div>
-                        <Form.Label>Payment Method</Form.Label>
+                        <Form.Label>{t('lb_payment_method')}</Form.Label>
                         {paymentMethodOptions && (
                           <SelectPro
                             key="payment_method"
@@ -701,7 +722,7 @@ const Main = (props: any) => {
                         )}
                       </div>
                       <div>
-                        <Form.Label>Payment Statue</Form.Label>
+                        <Form.Label>{t('lb_payment_status')}</Form.Label>
                         {paymentStatusOptions && (
                           <SelectPro
                             key="payment_status"
@@ -720,7 +741,7 @@ const Main = (props: any) => {
                       <textarea
                         {...register('payment_remark')}
                         className="form-control "
-                        placeholder="Remarks"
+                        placeholder={t('ph_remarks')}
                         rows={2}
                       />
                     </Stack>
@@ -731,25 +752,25 @@ const Main = (props: any) => {
 
             <Card className="card custom-card">
               <Card.Header className="card-header">
-                <Card.Title>Remarks</Card.Title>
+                <Card.Title>{t('lb_remarks')}</Card.Title>
                 <Card.Body>
                   <Stack direction="vertical" gap={3}>
                     <textarea
                       {...register('remark')}
                       className="form-control "
-                      placeholder="Remark"
+                      placeholder={t('ph_remarks')}
                       rows={2}
                     />
                     <textarea
                       {...register('highlight')}
                       className="form-control "
-                      placeholder="Highlight on List"
+                      placeholder={t('ph_highlight')}
                       rows={2}
                     />
                     <textarea
                       {...register('print_remark')}
                       className="form-control "
-                      placeholder="Print_remark"
+                      placeholder={t('ph_print_remark')}
                       rows={2}
                     />
                   </Stack>
