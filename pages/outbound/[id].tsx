@@ -46,6 +46,7 @@ import { Switch } from '@mui/material';
 import {
   DECIMAL_GREATER_EQUAL_0_NULLABLE,
   DECIMAL_GREATER_THAN_0,
+  RESULT_CODE,
 } from '@/lib/constants';
 import { useAtom } from 'jotai';
 import {
@@ -172,6 +173,7 @@ const Main = (props: any) => {
     formState: { errors },
     getValues,
     setValue,
+    setFocus,
     reset,
     control,
   } = useForm({
@@ -432,7 +434,7 @@ const Main = (props: any) => {
     isCreate: boolean,
     error: string,
   ) => {
-    if (response?.code === 0) {
+    if (response?.code === RESULT_CODE.SUCCESS) {
       if (saveType.current === 'savenew') {
         clearAllAtom();
         clearAllData();
@@ -446,6 +448,9 @@ const Main = (props: any) => {
         isCreate ? t('toast_created_success') : t('toast_update_success'),
         toastOptions,
       );
+    } else if (response?.code === RESULT_CODE.DATA_ALREADY_EXISTED) {
+      toast.error(t('toast_invoice_no_duplicate'), toastOptions);
+      setFocus('invoice_no');
     } else if (response && response?.code > 0) {
       toast.error(`Save failed: ${response.data}`, toastOptions);
     } else if (!_.isEmpty(error)) {

@@ -1,4 +1,4 @@
-export const SYS_VERSION = 'v26.09.07';
+export const SYS_VERSION = 'v26.09.28';
 export const DEFAULT_STORE_LOGO = '/assets/img/brand/wms-logo.svg';
 export const mobileWidth = parseInt(
   process.env.NEXT_PUBLIC_MOBILE_WIDTH as string,

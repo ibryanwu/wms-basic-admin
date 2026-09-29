@@ -1,5 +1,6 @@
 // InboundRequestViewTable
 import PickingListForOneOrder from '@/component-lib/data-table/picking/PickingListForOneOrderDt';
+import { RESULT_CODE } from '@/lib/constants';
 import { useToken } from '@/lib/hooks/use-token';
 import { useGetPickingListData } from '@/rest/outbound';
 import {
@@ -30,6 +31,7 @@ import { useFinishOrder } from '@/rest/outbound';
 import RequestViewTable from '@/component-lib/data-table/request-view/request-detailDT';
 import { useApproveRequest } from '@/rest/outbound-request';
 import { Col, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 export default function OutboundRequestViewDrawer(props: any) {
   // Values  -------------------------------------------------
@@ -39,6 +41,7 @@ export default function OutboundRequestViewDrawer(props: any) {
   );
   const { hasToken } = useToken();
   const routes = useRouter();
+  const { t } = useTranslation('request_list');
   // Auth ----------------------------------------------------
   useEffect(() => {
     if (!hasToken()) {
@@ -63,10 +66,14 @@ export default function OutboundRequestViewDrawer(props: any) {
   // Use Effect  ---------------------------------------------
   useEffect(() => {}, [data]);
   useEffect(() => {
-    if (approveOrderRes?.code === 0) {
+    if (approveOrderRes?.code === RESULT_CODE.SUCCESS) {
       toast.success('Convert Successfully', toastOptions);
       refreshList();
       handleClose();
+    } else if (
+      approveOrderRes?.code === RESULT_CODE.DATA_ALREADY_EXISTED
+    ) {
+      toast.error(t('toast_invoice_no_duplicate'), toastOptions);
     } else if (approveOrderRes?.msg) {
       toast.error(`Convert failed:${approveOrderRes?.msg}`, toastOptions);
       refreshList();

@@ -24,6 +24,7 @@
   "toast_created_success": "Inbound created successfully",
   "toast_update_success": "Order Update successfully",
   "toast_check_items": "Please add at least one item",
+  "toast_invoice_no_duplicate": "Cannot approve: Invoice No already exists on an outbound order",
   "Modal---------------------------------": "",
   "md_approve_confirm_title": "Confirm Approve Order",
   "md_approve_confirm_body": "Confirm Approve Order",

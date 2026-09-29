@@ -68,6 +68,7 @@
   "toast_created_success": "出库单创建成功",
   "toast_update_success": "订单更新成功",
   "toast_check_items": "请至少添加一个商品",
+  "toast_invoice_no_duplicate": "发票号已存在，请更换后重试",
 
   "Modal---------------------------------": "",
   "md_approve_confirm_title": "确认批准订单",

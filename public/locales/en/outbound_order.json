@@ -68,6 +68,7 @@
   "toast_created_success": "Outbound created successfully",
   "toast_update_success": "Order Update successfully",
   "toast_check_items": "Please add at least one item",
+  "toast_invoice_no_duplicate": "Invoice No already exists",
 
   "Modal---------------------------------": "",
   "md_approve_confirm_title": "Confirm Approve Order",

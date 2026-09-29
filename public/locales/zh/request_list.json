@@ -23,6 +23,7 @@
   "toast_created_success": "入库请求创建成功",
   "toast_update_success": "订单更新成功",
   "toast_check_items": "请至少添加一个商品",
+  "toast_invoice_no_duplicate": "无法审批：发票号与已有出库单重复",
 
   "Modal---------------------------------": "",
   "md_approve_confirm_title": "确认批准订单",
