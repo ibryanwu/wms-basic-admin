@@ -16,6 +16,8 @@ import Seo from '@/shared/layout-components/seo/seo';
 import { useGetGrossMarginEstimate } from '../../rest/report';
 import GorssMarginEstDt from '@/component-lib/data-table/gorssMarginEstDt';
 import { useMe } from '@/rest/auth';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 
 const BatchList = () => {
   // Values  -------------------------------------------------
@@ -24,21 +26,18 @@ const BatchList = () => {
   // UseState  -----------------------------------------------
   // UseForm  ------------------------------------------------
   // Hooks  --------------------------------------------------
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.dashboard');
   const { data: grossMarginEst } = useGetGrossMarginEstimate();
   // Use Effect  ---------------------------------------------
   useEffect(() => {
     getMe();
   }, []);
 
-  useEffect(() => {
-    console.log('🚀 ~ useEffect ~ me:', me);
-  }, [me]);
-
   // Function ------------------------------------------------
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'BatchList'} />
 
@@ -86,7 +85,7 @@ const BatchList = () => {
           {/* <!-- row closed --> */}
         </div>
       ) : (
-        '未授权'
+        <Unauthorized />
       )}
     </>
   );

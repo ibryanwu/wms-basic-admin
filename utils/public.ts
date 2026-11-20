@@ -104,3 +104,13 @@ export function localToServer(
   }
   return dayjs.tz(localTime, LOCAL_TIMEZONE).utc().format(format);
 }
+
+export {
+  normalizePermissionApis,
+  hasPagePermission,
+  hasApiPermission,
+  hasAnyPagePermission,
+  menuPermissionVisible,
+  useHasPagePermission,
+  useHasApiPermission,
+} from '@/lib/permission';

@@ -3,7 +3,19 @@ import { useMutation, useQuery } from 'react-query';
 import client from './client';
 import { API_ENDPOINTS } from './client/api-endpoints';
 import { useAtom } from 'jotai';
-import { storeInfoAtomS, userInfoAtomS, userRoleAtomS } from '../stores/atom';
+import {
+  storeInfoAtomS,
+  userInfoAtomS,
+  userRoleAtomS,
+  permissionsAtomS,
+} from '../stores/atom';
+import {
+  clearAuthSession,
+  emptyPermissions,
+  parsePermissionsFromPayload,
+} from '@/lib/auth-session';
+import { findFirstAccessiblePage } from '@/lib/route-permission';
+import { normalizePermissionApis } from '@/lib/permission';
 import { useToken } from '../lib/hooks/use-token';
 import { useState } from 'react';
 import Cookies from 'js-cookie';
@@ -13,8 +25,8 @@ import { useRouter } from 'next/router';
 
 export function cleanCache() {
   const { removeToken } = useToken();
-
   removeToken();
+  clearAuthSession();
 }
 
 export function useLogin() {
@@ -24,6 +36,7 @@ export function useLogin() {
   const [, setUserRoles] = useAtom(userRoleAtomS);
   const [, setUserInfo] = useAtom(userInfoAtomS);
   const [, setStoreInfo] = useAtom(storeInfoAtomS);
+  const [, setPermissions] = useAtom(permissionsAtomS);
   const { setToken } = useToken();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<number | null>(null);
@@ -42,16 +55,47 @@ export function useLogin() {
       Cookies.remove(AUTH_TOKEN_KEY);
       // clear storage
       setUserRoles('');
+      setPermissions(emptyPermissions());
       // login
       setToken(data.token.accessToken, data.token.expiresIn);
       setUserInfo(data.user);
       setUserRoles(data.user.role);
       setStoreInfo({ ...data.user.store, ...data.info });
-      setTimeout(() => {
-        data.user.role === 'USER' || data.user.role === 'ADMIN'
-          ? router.push('/dashboard')
-          : router.push('/');
-      }, 1000);
+
+      const permissionsData = parsePermissionsFromPayload(data);
+      setPermissions(permissionsData);
+
+      const navigateAfterLogin = (perms = permissionsData) => {
+        router.push(findFirstAccessiblePage(perms));
+      };
+
+      const hasPermissions =
+        permissionsData.pages.length > 0 ||
+        normalizePermissionApis(permissionsData.apis).length > 0;
+
+      if (!hasPermissions) {
+        client.auth
+          .getMe()
+          .then((response: any) => {
+            if (response?.code === 0 && response?.data?.permissions) {
+              const next = {
+                pages: Array.isArray(response.data.permissions.pages)
+                  ? response.data.permissions.pages
+                  : [],
+                apis: Array.isArray(response.data.permissions.apis)
+                  ? response.data.permissions.apis
+                  : [],
+              };
+              setPermissions(next);
+              navigateAfterLogin(next);
+              return;
+            }
+            navigateAfterLogin();
+          })
+          .catch(() => navigateAfterLogin());
+      } else {
+        setTimeout(navigateAfterLogin, 300);
+      }
     },
     onError: (err: Error) => {
       setError(true);

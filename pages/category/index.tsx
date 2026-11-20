@@ -23,6 +23,8 @@ import { useGetCategory } from '@/rest/category';
 import CategoryListDataTable from '@/component-lib/data-table/meta/CategoryListDt';
 import { getStaticTranslations } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 export async function getStaticProps({ locale }: { locale: string }) {
   return getStaticTranslations(locale, ['common', 'category', 'menu']);
 }
@@ -39,7 +41,8 @@ const CategoryList = () => {
   // Hooks  --------------------------------------------------
   const { t } = useTranslation('category');
   const { t: t0 } = useTranslation('common');
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.category');
   const { data: categoryData, refetch } = useGetCategory({
     isActive: undefined,
   });
@@ -56,7 +59,7 @@ const CategoryList = () => {
   // Function ------------------------------------------------
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'CategoryList'} />
 
@@ -121,7 +124,7 @@ const CategoryList = () => {
           {/* <!-- row closed --> */}
         </div>
       ) : (
-        'Unauthorized'
+        <Unauthorized />
       )}
     </>
   );

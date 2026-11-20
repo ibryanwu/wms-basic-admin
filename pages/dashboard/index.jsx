@@ -35,7 +35,8 @@ import { useFetchDayTotalizer, useGetTotalizersView } from '@/rest/report';
 import { mobileWidth } from '@/lib/sys';
 import dayjs from 'dayjs';
 import { useMe } from '@/rest/auth';
-import { convertPrice } from '@/utils/public';
+import { convertPrice, useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 import Location from '../location';
 import { getStaticTranslations } from '@/lib/i18n';
 
@@ -55,7 +56,8 @@ const Dashboard = () => {
 
   // UseForm  ------------------------------------------------
   // Hooks  --------------------------------------------------
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.dashboard');
 
   // Use Effect  ---------------------------------------------
 
@@ -82,7 +84,7 @@ const Dashboard = () => {
 
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'Dashboard1'} />
           <React.Fragment>
@@ -249,7 +251,7 @@ const Dashboard = () => {
           </React.Fragment>
         </div>
       ) : (
-        '未授权'
+        <Unauthorized />
       )}
     </>
   );

@@ -10,6 +10,13 @@ import { IVendor } from '@/types/vendor';
 import { IUser } from '@/types/user';
 import { IBin, IShelf, IZone } from '@/types/location';
 import { ICategory } from '@/types/category';
+import {
+  ApiResponse,
+  Role,
+  RolePermissionsResponse,
+  SavePermissionRequest,
+  SavePermissionResponse,
+} from '@/types/role';
 
 class Client {
   users = {
@@ -924,6 +931,26 @@ class Client {
         data: params,
       });
     },
+  };
+
+  role = {
+    getAll: () =>
+      HttpClient.get<ApiResponse<Role[]>>(API_ENDPOINTS.ROLES_GET_ALL),
+    getPermissions: (roleId: number) =>
+      HttpClient.get<ApiResponse<RolePermissionsResponse>>(
+        API_ENDPOINTS.ROLE_PERMISSIONS_GET.replace(
+          '{roleId}',
+          roleId.toString(),
+        ),
+      ),
+    savePermission: (roleId: number, data: SavePermissionRequest) =>
+      HttpClient.post<ApiResponse<SavePermissionResponse>>({
+        url: API_ENDPOINTS.ROLE_PERMISSION_SAVE.replace(
+          '{roleId}',
+          roleId.toString(),
+        ),
+        data,
+      }),
   };
 }
 

@@ -25,6 +25,8 @@ import { useGetAllUser } from '@/rest/users';
 import UserListDataTable from '@/component-lib/data-table/meta/UserListDT';
 import { getStaticTranslations } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 
 export async function getStaticProps({ locale }: { locale: string }) {
   return getStaticTranslations(locale, ['common', 'user', 'menu']);
@@ -41,7 +43,8 @@ const UserList = () => {
   // Hooks  --------------------------------------------------
   const { t } = useTranslation('user');
   const { t: t0 } = useTranslation('common');
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.users');
   const { data: userListData, refetch } = useGetAllUser({
     isActive: undefined,
   });
@@ -58,7 +61,7 @@ const UserList = () => {
   // Function ------------------------------------------------
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'User List'} />
 
@@ -125,7 +128,7 @@ const UserList = () => {
           {/* <!-- row closed --> */}
         </div>
       ) : (
-        'Unauthorized'
+        <Unauthorized />
       )}
     </>
   );

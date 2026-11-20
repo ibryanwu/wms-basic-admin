@@ -176,6 +176,9 @@ export const API_ENDPOINTS = {
   GET_ALL_PAYMENT_STATUS: 'payment/getAllPaymentStatus',
 
   //Admin Management
+  ROLES_GET_ALL: 'roles',
+  ROLE_PERMISSIONS_GET: 'roles/{roleId}/permissions',
+  ROLE_PERMISSION_SAVE: 'roles/{roleId}/permissions',
 
   //Dashboard report
   GET_TOTALIZERS_VIEW: 'report/getTotalizersView',

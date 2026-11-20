@@ -113,7 +113,7 @@ export const defaultItemFormValues = {
 export const defaultUserFormValues = {
   firstName: '',
   lastName: '',
-  role: 'USER',
+  role: undefined,
   email: '',
   //查询
   search: '',

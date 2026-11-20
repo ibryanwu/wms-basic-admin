@@ -14,5 +14,7 @@
 
   "btn_cancel": "Cancel",
   "btn_export": "Export Result to CSV",
-  "btn_refresh": "Refresh"
+  "btn_refresh": "Refresh",
+  "loading": "Loading...",
+  "unauthorized": "You do not have permission to access this page."
 }

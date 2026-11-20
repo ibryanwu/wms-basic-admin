@@ -1,58 +1,59 @@
 import { Switch } from '@mui/material';
 import {
   Button,
-  Col,
-  Container,
   Form,
   Modal,
-  OverlayTrigger,
-  Row,
   Stack,
-  Tooltip,
 } from 'react-bootstrap';
 import { Grid } from '@mui/joy';
 import SelectPro from '../../../component-lib/select';
 import Select from 'react-select';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { defaultUserFormValues } from '@/service/meta';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useAtom } from 'jotai';
 import { openUserModalAtom } from '@/stores/atom';
 import Link from 'next/link';
 import { IUser } from '@/types/user';
 import { useCreateUser, useUpdateUser } from '@/rest/users';
+import { useGetAllRoles } from '@/rest/role';
 import { toastOptions } from '@/utils/public';
 import _ from 'lodash';
 import { useGetAllVendors } from '@/rest/vendor';
 import { showErrorMessages } from '@/service/showErrorMessages';
 import { useTranslation } from 'react-i18next';
 
+type RoleOptionType = {
+  value: number;
+  label: string;
+  code?: string;
+};
+
 export function UserDialog(prop: any) {
   const { t } = useTranslation('user');
   const { t: t0 } = useTranslation('common');
-  const { editingItem, showAddBt, setEditItem } = prop; //编辑时用来初始化数据的
+  const { editingItem, showAddBt, setEditItem } = prop;
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  type OptionType = {
-    value: string;
-    label: string;
-  };
-  // Values  -------------------------------------------------
-  const options: OptionType[] = [
-    { value: 'USER', label: 'USER' },
-    { value: 'ADMIN', label: 'ADMIN' },
-    { value: 'SINV_USER', label: 'SHARED INV USER' },
-  ];
-  // Auth ----------------------------------------------------
-  // Atoms ---------------------------------------------------
-  const [show, setShow] = useAtom(openUserModalAtom);
-  // UseState  -----------------------------------------------
-  const [formStatus, setFormStatus] = React.useState<string>('create'); // 判断是Create还是update
-  const [selectedItem, setSelectedItem] = React.useState<any>(); //选中的Item 编辑态需要初始化
 
-  // UseForm  ------------------------------------------------
+  const { data: rolesData, refetch: refetchRoles } = useGetAllRoles();
+  const roleOptions: RoleOptionType[] =
+    Array.isArray(rolesData) && rolesData.length > 0
+      ? rolesData
+          .filter((r: { isActive?: boolean }) => r.isActive !== false)
+          .map((r: { id: number; name: string; code?: string }) => ({
+            value: r.id,
+            label: r.name,
+            code: r.code,
+          }))
+      : [];
+
+  const [show, setShow] = useAtom(openUserModalAtom);
+  const [formStatus, setFormStatus] = React.useState<string>('create');
+  const initialRoleSetForEditRef = useRef<string | number | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -60,13 +61,12 @@ export function UserDialog(prop: any) {
     reset,
     control,
     setValue,
-    getValues,
   } = useForm<IUser>({
     mode: 'onTouched',
     reValidateMode: 'onSubmit',
     defaultValues: defaultUserFormValues as any,
   });
-  // Hooks  --------------------------------------------------
+
   const { data: vendorsData } = useGetAllVendors({
     type: 2,
     isOnlyOwnItem: true,
@@ -74,46 +74,84 @@ export function UserDialog(prop: any) {
   const {
     mutate: update,
     data: dataUpdate,
-    isLoading: isLoadingUpdate,
     serverError: updateError,
   } = useUpdateUser();
   const {
     mutate: create,
     data: dataCreate,
-    isLoading: isLoadingCreate,
     serverError: createError,
   } = useCreateUser();
-  // Use Effect  ---------------------------------------------
-  // 编辑态时的初始化数据
-  // 打开时初始化
+
+  useEffect(() => {
+    if (show) {
+      refetchRoles();
+    }
+  }, [show, refetchRoles]);
+
   useEffect(() => {
     if (show && !editingItem) {
-      // @ts-ignore
-      reset(defaultUserFormValues);
-      setSelectedItem(undefined);
+      reset(defaultUserFormValues as any);
       setFormStatus('create');
       setEditItem(undefined);
     }
-    // --------------------------------------------------------------------------------------------------------------------
     if (show && editingItem && Object.keys(editingItem).length > 0) {
-      editingItem.role = {
-        value: editingItem.role,
-        label: editingItem.role,
-      };
-
-      editingItem.password = '';
-      reset(editingItem);
+      const item = { ...editingItem, password: '' };
+      reset(item);
       if (editingItem.vendor) {
         setValue('vendor', {
           value: editingItem.vendor.id,
           label: editingItem.vendor.name,
         });
       }
-      // reset({ isActive: false });
       setFormStatus('update');
     }
     if (!show) setEditItem(undefined);
   }, [show]);
+
+  const editingItemId = editingItem?.id ?? null;
+  const roleOptionsLength = roleOptions.length;
+  useEffect(() => {
+    if (!show) {
+      initialRoleSetForEditRef.current = null;
+      return;
+    }
+    if (
+      !editingItem ||
+      Object.keys(editingItem).length === 0 ||
+      roleOptionsLength === 0
+    ) {
+      return;
+    }
+    if (initialRoleSetForEditRef.current === editingItemId) return;
+    initialRoleSetForEditRef.current = editingItemId;
+
+    const roleId =
+      editingItem.roleId ??
+      editingItem.role?.id ??
+      (typeof editingItem.role === 'object' && editingItem.role?.value != null
+        ? editingItem.role.value
+        : null);
+    const roleLabel =
+      editingItem.role?.name ??
+      editingItem.role?.label ??
+      (typeof editingItem.role === 'string' ? editingItem.role : null);
+
+    if (roleId != null) {
+      const matched =
+        roleOptions.find((o) => o.value === roleId) ??
+        (roleLabel
+          ? roleOptions.find(
+              (o) => o.label === roleLabel || (o.code && o.code === roleLabel),
+            )
+          : null);
+      if (matched) setValue('role', matched);
+    } else if (roleLabel) {
+      const matched = roleOptions.find(
+        (o) => o.label === roleLabel || (o.code && o.code === roleLabel),
+      );
+      if (matched) setValue('role', matched);
+    }
+  }, [show, editingItemId, roleOptionsLength, editingItem, roleOptions, setValue]);
 
   useEffect(() => {
     if (dataCreate?.code === 0) {
@@ -127,7 +165,7 @@ export function UserDialog(prop: any) {
       toast.error(createError, toastOptions);
       setShow(false);
     }
-  }, [dataCreate, createError]);
+  }, [dataCreate, createError, setEditItem, setShow]);
 
   useEffect(() => {
     if (dataUpdate?.code === 0) {
@@ -141,30 +179,35 @@ export function UserDialog(prop: any) {
       toast.error(updateError, toastOptions);
       setShow(false);
     }
-  }, [dataUpdate, updateError]);
+  }, [dataUpdate, updateError, setEditItem, setShow]);
 
-  // Function ------------------------------------------------
   const checkBeforeSubmit = (data: IUser) => {
-    const errors: string[] = []; // 使用数组存储错误信息
-    if (data.role && data.role.value === 'SINV_USER') {
+    const validationErrors: string[] = [];
+    if (!data.role || (data.role as RoleOptionType).value == null) {
+      validationErrors.push('Please select a role');
+    }
+    if (
+      data.role &&
+      (data.role as RoleOptionType).code === 'SINV_USER'
+    ) {
       if (_.isNil(data.vendor)) {
-        errors.push('You must select a vendor');
+        validationErrors.push('You must select a vendor');
       }
     }
 
     if (formStatus === 'create') {
       if (_.isEmpty(data.password)) {
-        errors.push('Please input password');
+        validationErrors.push('Please input password');
       }
     }
 
-    if (errors.length > 0) {
-      showErrorMessages(errors);
+    if (validationErrors.length > 0) {
+      showErrorMessages(validationErrors);
       return false;
     }
     return true;
   };
-  // Save
+
   const save = (data: IUser) => {
     if (checkBeforeSubmit(data)) {
       onSubmit(data);
@@ -172,23 +215,30 @@ export function UserDialog(prop: any) {
     }
   };
 
-  // Submit
   const onSubmit = (data: IUser) => {
-    data.role = data.role.value;
+    const roleId =
+      data.role &&
+      typeof data.role === 'object' &&
+      (data.role as RoleOptionType).value != null
+        ? (data.role as RoleOptionType).value
+        : null;
+
     if (data.vendor) {
       data.vendorId = data.vendor.value;
     }
 
-    const { password, ...newData } = data;
+    const { password, role, ...rest } = data;
+    const newData: any = { ...rest, roleId };
     if (_.isString(data.password) && !_.isEmpty(_.trim(data.password))) {
-      // @ts-ignore
       newData.password = data.password;
     }
 
     if (formStatus === 'create' && data) {
       create(newData as IUser);
     }
-    if (formStatus === 'update' && data) update(newData as IUser);
+    if (formStatus === 'update' && data) {
+      update(newData as IUser);
+    }
   };
 
   return (
@@ -230,7 +280,6 @@ export function UserDialog(prop: any) {
             <Form.Group className="form-group">
               <Form.Label>{t('lb_last_name')}</Form.Label>
               <Form.Control
-                autoFocus
                 {...register('lastName', {
                   required: true,
                 })}
@@ -257,18 +306,23 @@ export function UserDialog(prop: any) {
                         <Select
                           className=""
                           value={field.value}
-                          // rules={{ required: 'Username is required' }}
                           onChange={(value) => {
                             field.onChange(value);
-                            if (value !== 'SINV_USER') {
+                            if (
+                              !value ||
+                              (value as RoleOptionType).code !== 'SINV_USER'
+                            ) {
                               setValue('vendor', {});
                             }
                           }}
-                          // @ts-ignore
-                          options={options}
+                          options={roleOptions}
                           isMulti={false}
-                          // @ts-ignore
-                          rules={{ required: 'Required' }}
+                          isLoading={roleOptions.length === 0}
+                          placeholder={
+                            roleOptions.length === 0
+                              ? t('loading_roles', 'Loading roles…')
+                              : t('select_role', 'Select role')
+                          }
                         />
                       )}
                     />
@@ -349,9 +403,7 @@ export function UserDialog(prop: any) {
                   control={control}
                   render={({ field }) => (
                     <Switch
-                      // rules={{ required: 'Username is required' }}
                       onChange={(value) => {
-                        // @ts-ignore
                         field.onChange(value);
                       }}
                       checked={field.value}

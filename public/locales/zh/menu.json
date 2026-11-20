@@ -21,5 +21,6 @@
   "setting": "设置",
   "category": "类别",
   "unit": "单位",
-  "users": "用户"
+  "users": "用户",
+  "role_permission": "角色权限"
 }

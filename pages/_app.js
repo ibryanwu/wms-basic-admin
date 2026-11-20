@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ToastContainer } from 'react-toastify';
 //多语
 import { appWithTranslation } from 'next-i18next';
+import { useRouteGuard } from '../lib/hooks/use-route-guard';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const layouts = {
   Authenticationlayout: Authenticationlayout,
 };
 function MyApp({ Component, pageProps }) {
+  useRouteGuard();
   const Layout =
     layouts[Component.layout] ||
     ((pageProps) => <Component>{pageProps}</Component>);

@@ -23,6 +23,8 @@ import { useAtom } from 'jotai';
 import { openWarehouseModalAtom } from '@/stores/atom';
 import { getStaticTranslations } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 export async function getStaticProps({ locale }: { locale: string }) {
   return getStaticTranslations(locale, ['common', 'warehouse', 'menu']);
 }
@@ -39,7 +41,8 @@ const WarehouseList = () => {
   // Hooks  --------------------------------------------------
   const { t } = useTranslation('warehouse');
   const { t: t0 } = useTranslation('common');
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.warehouse');
   const { data: warehouse, refetch } = useGetWarehouse({ isActive: undefined });
   // Use Effect  ---------------------------------------------
   useEffect(() => {
@@ -55,7 +58,7 @@ const WarehouseList = () => {
   // Function ------------------------------------------------
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'Warehouse'} />
 
@@ -120,7 +123,7 @@ const WarehouseList = () => {
           {/* <!-- row closed --> */}
         </div>
       ) : (
-        'Unauthorized'
+        <Unauthorized />
       )}
     </>
   );

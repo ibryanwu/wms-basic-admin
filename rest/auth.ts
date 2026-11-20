@@ -5,14 +5,54 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useToken } from '@/lib/hooks/use-token';
 import { useRouter } from 'next/router';
+import { useAtom } from 'jotai';
+import {
+  storeInfoAtomS,
+  userInfoAtomS,
+  userRoleAtomS,
+  permissionsAtomS,
+} from '@/stores/atom';
+import { parsePermissionsFromPayload } from '@/lib/auth-session';
 
 export const useMe = (): any => {
   const [isMe, setIsMe] = useState(false);
   const router = useRouter();
-  const { hasToken, removeToken } = useToken();
+  const { removeToken } = useToken();
+  const [userInfo, setUserInfo] = useAtom(userInfoAtomS);
+  const [, setUserRoles] = useAtom(userRoleAtomS);
+  const [storeInfo, setStoreInfo] = useAtom(storeInfoAtomS);
+  const [, setPermissions] = useAtom(permissionsAtomS);
+
   const { mutate, data, isLoading } = useMutation(client.auth.getMe, {
-    onSuccess: (data: any) => {
-      if (typeof data?.id === 'string') {
+    onSuccess: (response: any) => {
+      if (response?.code === 0 && response?.data) {
+        const { user, permissions } = response.data;
+
+        if (user) {
+          setUserInfo(user);
+          if (user.role) {
+            setUserRoles(user.role);
+          }
+          setIsMe(true);
+        }
+
+        if (user?.store) {
+          setStoreInfo({
+            ...storeInfo,
+            ...user.store,
+          });
+        }
+
+        if (permissions) {
+          setPermissions({
+            pages: Array.isArray(permissions.pages) ? permissions.pages : [],
+            apis: Array.isArray(permissions.apis) ? permissions.apis : [],
+          });
+        } else {
+          setPermissions(parsePermissionsFromPayload(response));
+        }
+      } else if (typeof response?.id === 'string') {
+        setUserInfo(response);
         setIsMe(true);
       }
     },
@@ -22,15 +62,15 @@ export const useMe = (): any => {
         router.push('/login');
       }
     },
-    onSettled: () => {},
   });
 
-  return { mutate, data, isLoading, isMe };
+  return { mutate, data, isLoading, isMe, me: userInfo };
 };
+
 export const useBackEndVersion = (): any => {
   const { data, isLoading, error, ...props } = useQuery(
     [API_ENDPOINTS.BACKEND_V],
-    ({ queryKey }) => client.auth.getBackendV(),
+    () => client.auth.getBackendV(),
   );
 
   return {
@@ -43,17 +83,12 @@ export const useBackEndVersion = (): any => {
 
 export const usePostEmailForForgotPsw = () => {
   return useMutation(client.auth.postEmailForForgotPsw, {
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success('Email sent successfully! ');
     },
-    onError: (error) => {
-      console.log(
-        '🚀 ~ file: auth.ts:17 ~ usePostEmailForForgotPsw ~ error:',
-        error,
-      );
+    onError: () => {
       toast.error('---wrong');
     },
-    onSettled: () => {},
   });
 };
 
@@ -66,10 +101,8 @@ export const useResetPsw = () => {
         toast.error('Password Reset Failed!');
       }
     },
-    onError: (error) => {
-
+    onError: () => {
       toast.error('Password Reset Failed!');
     },
-    onSettled: () => {},
   });
 };

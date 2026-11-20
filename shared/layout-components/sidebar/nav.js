@@ -8,7 +8,6 @@ import FormatIndentIncreaseIcon from '@mui/icons-material/FormatIndentIncrease';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import AssignmentIndOutlinedIcon from '@mui/icons-material/AssignmentIndOutlined';
-
 import MoveUpOutlinedIcon from '@mui/icons-material/MoveUpOutlined';
 import { useTranslation } from 'next-i18next';
 
@@ -29,6 +28,7 @@ export const MENUITEMS = [
         selected: true,
         active: true,
         path: `/dashboard`,
+        permission: 'page.dashboard',
       },
       {
         title: 'inventory',
@@ -49,6 +49,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'items',
+            permission: 'page.items',
           },
           {
             path: `/report/inv-transactions`,
@@ -56,6 +57,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'transactions',
+            permission: 'page.report.inv-transactions',
           },
           {
             path: `/report/inventory-by-item`,
@@ -63,6 +65,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'inventory_detail',
+            permission: 'page.report.inventory-by-item',
           },
           {
             path: `/report/inventory-by-warehouse`,
@@ -70,6 +73,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'by_warehouse',
+            permission: 'page.report.inventory-by-warehouse',
           },
         ],
       },
@@ -92,6 +96,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'inbound_order',
+            permission: 'page.inbound.create',
           },
           {
             path: `/inbound/order-list`,
@@ -99,6 +104,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'order_list',
+            permission: 'page.inbound.order-list',
           },
           {
             path: `/inbound/request-list`,
@@ -106,6 +112,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'request_list',
+            permission: 'page.inbound.request-list',
           },
         ],
       },
@@ -128,6 +135,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'outbound_order',
+            permission: 'page.outbound.create',
           },
           {
             path: `/outbound/order-list`,
@@ -135,6 +143,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'order_list',
+            permission: 'page.outbound.order-list',
           },
           {
             path: `/outbound/picking-list`,
@@ -142,6 +151,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'picking_list',
+            permission: 'page.outbound.picking-list',
           },
           {
             path: `/outbound/request-list`,
@@ -149,6 +159,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'request_list',
+            permission: 'page.outbound.request-list',
           },
         ],
       },
@@ -168,6 +179,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'transfer_order',
+            permission: 'page.transfer-order.create',
           },
           {
             path: `/transfer-order/order-list`,
@@ -175,6 +187,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'order_list',
+            permission: 'page.transfer-order.order-list',
           },
         ],
       },
@@ -190,6 +203,7 @@ export const MENUITEMS = [
         selected: false,
         active: false,
         path: `/vendor`,
+        permission: 'page.vendor',
       },
       {
         title: 'warehouse',
@@ -205,6 +219,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'warehouse',
+            permission: 'page.warehouse',
           },
           {
             path: `/location`,
@@ -212,6 +227,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'location',
+            permission: 'page.location',
           },
         ],
       },
@@ -221,7 +237,6 @@ export const MENUITEMS = [
         type: 'sub',
         selected: true,
         active: true,
-        //path: `/`,
         children: [
           {
             path: `/category`,
@@ -229,6 +244,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'category',
+            permission: 'page.category',
           },
 
           {
@@ -237,6 +253,7 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'unit',
+            permission: 'page.unit',
           },
           {
             path: `/users`,
@@ -244,6 +261,15 @@ export const MENUITEMS = [
             active: false,
             selected: false,
             title: 'users',
+            permission: 'page.users',
+          },
+          {
+            path: `/role-permission`,
+            type: 'link',
+            active: false,
+            selected: false,
+            title: 'role_permission',
+            permission: 'page.role.permission',
           },
         ],
       },

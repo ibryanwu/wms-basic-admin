@@ -4,7 +4,8 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
-import { storeInfoAtomS } from '../../../stores/atom';
+import { storeInfoAtomS, permissionsAtomS } from '../../../stores/atom';
+import { isPrimaryMenuVisible, isChildMenuVisible } from './menu-utils';
 import { getStoreLogoUrl } from '@/lib/sys';
 import { useTranslation } from 'react-i18next';
 let history = [];
@@ -15,6 +16,7 @@ const Sidebar = () => {
   const [menuitems, setMenuitems] = useState(MENUITEMS);
   //ATOM ----------------------------------------------------------------
   const [storeInfo] = useAtom(storeInfoAtomS);
+  const [permissions] = useAtom(permissionsAtomS);
   const { t: t1 } = useTranslation('menu'); // 加载 xxx.json 翻译文件
   // initial loading
   useEffect(() => {
@@ -249,7 +251,9 @@ const Sidebar = () => {
                   <li className="side-item side-item-category">
                     {t1(`${Item.menutitle}`)}
                   </li>
-                  {Item.Items.map((menuItem, i) => (
+                  {Item.Items.filter((menuItem) =>
+                    isPrimaryMenuVisible(menuItem, permissions, storeInfo),
+                  ).map((menuItem, i) => (
                     <li
                       className={`slide ${
                         menuItem.selected ? 'is-expanded' : ''
@@ -327,7 +331,15 @@ const Sidebar = () => {
                               : { display: 'none' }
                           }
                         >
-                          {menuItem.children.map((childrenItem, index) => {
+                          {menuItem.children
+                            .filter((childrenItem) =>
+                              isChildMenuVisible(
+                                childrenItem,
+                                permissions,
+                                storeInfo,
+                              ),
+                            )
+                            .map((childrenItem, index) => {
                             return (
                               <li
                                 key={index}

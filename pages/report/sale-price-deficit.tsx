@@ -16,6 +16,8 @@ import Seo from '@/shared/layout-components/seo/seo';
 import { useGetItemsSalePriceDeficit } from '../../rest/report';
 import GorssMarginEstDt from '@/component-lib/data-table/gorssMarginEstDt';
 import { useMe } from '@/rest/auth';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 import ItemsSalePriceDeficit from '@/component-lib/data-table/ItemsSalePriceDeficit';
 
 const BatchList = () => {
@@ -26,7 +28,8 @@ const BatchList = () => {
   const [grossMargin, setGrossMargin] = useState({ grossMargin: 1.38 });
   // UseForm  ------------------------------------------------
   // Hooks  --------------------------------------------------
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.dashboard');
   const { data: itemsSalePriceDeficit, refetch } =
     useGetItemsSalePriceDeficit(grossMargin);
   // Use Effect  ---------------------------------------------
@@ -35,14 +38,10 @@ const BatchList = () => {
     refetch();
   }, []);
 
-  useEffect(() => {
-    console.log('🚀 ~ useEffect ~ me:', me);
-  }, [me]);
-
   // Function ------------------------------------------------
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'BatchList'} />
 
@@ -94,7 +93,7 @@ const BatchList = () => {
           {/* <!-- row closed --> */}
         </div>
       ) : (
-        '未授权'
+        <Unauthorized />
       )}
     </>
   );

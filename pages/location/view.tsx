@@ -23,6 +23,8 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useGetWarehouse } from '@/rest/inv';
 import { searchLocationAtom } from '@/stores/atom';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 const SearchCard = (prop: any) => {
   const { setLocationData } = prop;
   // Values  -------------------------------------------------
@@ -119,7 +121,8 @@ const Location = () => {
 
   // UseForm  ------------------------------------------------
   // Hooks  --------------------------------------------------
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.location');
 
   // Use Effect  ---------------------------------------------
   useEffect(() => {
@@ -131,7 +134,7 @@ const Location = () => {
 
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'BatchList'} />
 
@@ -171,7 +174,7 @@ const Location = () => {
           </Row>
         </div>
       ) : (
-        'Unauthorized'
+        <Unauthorized />
       )}
     </>
   );

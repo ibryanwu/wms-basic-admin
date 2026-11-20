@@ -1,6 +1,7 @@
 export const TOKEN = 'token';
 export const AUTH_TOKEN_KEY = 'auth_token';
 export const AUTH_PERMISSIONS = 'auth_permissions';
+export const PERMISSIONS_STORAGE_KEY = 'permissions';
 export const LIMIT = 10;
 export const ROLE_SUPER_ADMIN = 'SUPER';
 export const ROLE_ADMIN = 'ADMIN';
@@ -13,6 +14,7 @@ export const USER_INFO_STORAGE_KEY = 'user_info';
 export const RESULT_CODE = {
   SUCCESS: 0,
   DATA_ALREADY_EXISTED: 5003,
+  PERMISSION_NO_ACCESS: 7001,
 } as const;
 
 //RegEx

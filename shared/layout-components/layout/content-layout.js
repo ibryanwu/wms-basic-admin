@@ -10,11 +10,16 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import favicon from '../../../public/assets/img/brand/favicon.png';
 import { useTranslation } from 'react-i18next';
+import { useMe } from '@/rest/auth';
+import { useToken } from '@/lib/hooks/use-token';
 const Header = dynamic(() => import('../header/header'), { ssr: false });
 const Switcher = dynamic(() => import('../switcher/switcher'), { ssr: false });
 const Sidebar = dynamic(() => import('../sidebar/sidebar'), { ssr: false });
 
 const Contentlayout = ({ children }) => {
+  const { hasToken } = useToken();
+  const { mutate: getMe } = useMe();
+
   let firstAdd = () => {
     //The created store
     document
@@ -50,6 +55,12 @@ const Contentlayout = ({ children }) => {
 
   useEffect(() => {
     firstAdd();
+  }, []);
+
+  useEffect(() => {
+    if (hasToken()) {
+      getMe();
+    }
   }, []);
 
   return (

@@ -1,0 +1,18 @@
+{
+  "permission_management": "Permission Management",
+  "role_code": "Role Code",
+  "role_name": "Role Name",
+  "role_name_en": "English Name",
+  "level": "Level",
+  "is_system": "System Role",
+  "is_active": "Status",
+  "manage_permissions": "Manage Permissions",
+  "no_roles": "No roles found",
+  "no_permissions": "No permissions found",
+  "no_permissions_in_module": "No permissions in this module",
+  "page_permissions": "Page Permissions",
+  "api_permissions": "API Permissions",
+  "filter_by_category": "Filter by category",
+  "all_categories": "All categories",
+  "show_only_ungranted": "Show ungranted only"
+}

@@ -21,6 +21,8 @@ import { openUnitModalAtom } from '@/stores/atom';
 import { useGetAllUnits } from '@/rest/unit';
 import { getStaticTranslations } from '@/lib/i18n';
 import { useTranslation } from 'react-i18next';
+import { useHasPagePermission } from '@/utils/public';
+import Unauthorized from '@/component-lib/auth/Unauthorized';
 
 export async function getStaticProps({ locale }: { locale: string }) {
   return getStaticTranslations(locale, ['common', 'unit', 'menu']);
@@ -35,7 +37,8 @@ const UnitList = () => {
   // UseState  -----------------------------------------------
   // UseForm  ------------------------------------------------
   // Hooks  --------------------------------------------------
-  const { mutate: getMe, data: me } = useMe();
+  const { mutate: getMe } = useMe();
+  const canAccess = useHasPagePermission('page.unit');
   const { data: unitListData, refetch } = useGetAllUnits({
     isActive: undefined,
   });
@@ -55,7 +58,7 @@ const UnitList = () => {
   // Function ------------------------------------------------
   return (
     <>
-      {me?.role && me.role === 'ADMIN' ? (
+      {canAccess ? (
         <div>
           <Seo title={'BatchList'} />
 
@@ -120,7 +123,7 @@ const UnitList = () => {
           {/* <!-- row closed --> */}
         </div>
       ) : (
-        'Unauthorized'
+        <Unauthorized />
       )}
     </>
   );

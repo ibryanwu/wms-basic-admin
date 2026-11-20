@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
-import { AUTH_TOKEN_KEY } from '../../lib/constants';
+import { AUTH_TOKEN_KEY, RESULT_CODE } from '../../lib/constants';
+import { toast } from 'react-toastify';
 import { HttpClientPostOptions } from '@/types';
 
 // const PUBLIC_REST_API_ENDPOINT = process.env.PUBLIC_REST_API_ENDPOINT;
@@ -26,14 +27,28 @@ Axios.interceptors.request.use((config: any) => {
 
 // Change response data/error here
 Axios.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const body = response.data;
+    const code = body?.code;
+    if (code === RESULT_CODE.PERMISSION_NO_ACCESS) {
+      toast.error(
+        body?.msg || 'You are not authorized to access this resource',
+      );
+    }
+    return response;
+  },
   function (error) {
-    if (
-      error.response &&
-      error.response.status === 401 //No Token -- Unauthorized
-      //||  (error.response && error.response.status === 403) //Has Token -- Forbidden
-    ) {
-      Cookies.remove(AUTH_TOKEN_KEY);
+    if (error.response) {
+      const code = error.response.data?.code;
+      if (code === RESULT_CODE.PERMISSION_NO_ACCESS) {
+        toast.error(
+          error.response.data?.msg ||
+            'You are not authorized to access this resource',
+        );
+      }
+      if (error.response.status === 401) {
+        Cookies.remove(AUTH_TOKEN_KEY);
+      }
     }
 
     return Promise.reject(error);

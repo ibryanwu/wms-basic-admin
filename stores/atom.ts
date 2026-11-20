@@ -5,7 +5,9 @@ import {
   USER_ROLES_STORAGE_KEY,
   USER_INFO_STORAGE_KEY,
   STORE_INFO,
+  PERMISSIONS_STORAGE_KEY,
 } from '../lib/constants';
+import type { UserPermissions } from '@/types/role';
 import { atomWithStorage } from 'jotai/utils';
 
 interface IuserInfo {
@@ -19,6 +21,14 @@ interface IuserInfo {
 // Store
 export const storeDefaultLanguageAtom = atom('en');
 export const storeInfoAtomS = atomWithStorage(STORE_INFO, {});
+
+export const permissionsAtomS = atomWithStorage<UserPermissions>(
+  PERMISSIONS_STORAGE_KEY,
+  {
+    pages: [],
+    apis: [],
+  },
+);
 // Order
 export const orderMultiUnitAtomS = atomWithStorage('MULTI_UNIT', false); //出入库单是否显示价格
 export const orderExtendInfoAtomS = atomWithStorage('EXTEND_INFO', false); //出入库单是否显示辅计量等信息

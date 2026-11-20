@@ -20,6 +20,7 @@ import { userInfoAtomS, storeInfoAtomS } from '@/stores/atom';
 import Avatar from '@mui/material/Avatar';
 import { useBackEndVersion } from '@/rest/auth';
 import { SYS_VERSION, getStoreLogoUrl } from '@/lib/sys';
+import { clearAuthSession } from '@/lib/auth-session';
 export default function Header() {
   const [user] = useAtom(userInfoAtomS);
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function Header() {
   const { removeToken } = useToken();
   function signOut() {
     removeToken();
+    clearAuthSession();
     router.push('/login');
   }
   let { basePath } = useRouter();
