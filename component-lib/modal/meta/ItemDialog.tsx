@@ -92,15 +92,19 @@ export function ItemDialog(prop: any) {
       }
     }
     if (show && editingItem && Object.keys(editingItem).length > 0) {
-      editingItem.name_en = editingItem.name_localizations.en;
-      editingItem.category = {
-        value: editingItem.category.id,
-        label: editingItem.category.name,
-      };
-      editingItem.base_unit = {
-        value: editingItem.base_unit.id,
-        label: editingItem.base_unit.name,
-      };
+      editingItem.name_en = editingItem.name_localizations?.en;
+      if (editingItem.category) {
+        editingItem.category = {
+          value: editingItem.category.id,
+          label: editingItem.category.name,
+        };
+      }
+      if (editingItem.base_unit) {
+        editingItem.base_unit = {
+          value: editingItem.base_unit.id,
+          label: editingItem.base_unit.name,
+        };
+      }
       if (editingItem.case_unit) {
         editingItem.case_unit = {
           value: editingItem.case_unit.id,
